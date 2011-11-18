@@ -1,6 +1,6 @@
-package com.coolblue.meta.pack;
+package com.modelmetrics.meta.pack;
 
-import com.coolblue.util.PackageUtil;
+import com.modelmetrics.util.PackageUtil;
 
 import java.util.*;
 

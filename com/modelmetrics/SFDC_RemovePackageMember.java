@@ -1,7 +1,7 @@
-package com.coolblue;
+package com.modelmetrics;
 
-import com.coolblue.util.XML_Util;
-import com.coolblue.util.PackageUtil;
+import com.modelmetrics.util.XML_Util;
+import com.modelmetrics.util.PackageUtil;
 
 import org.w3c.dom.*;
 import java.io.*;
@@ -14,9 +14,9 @@ import org.apache.tools.ant.Project;
 /**
  *  Task that removes a member from Salesforce Metadata package file.
 **/
-public class SFDC_RemovePackageType extends Task {
+public class SFDC_RemovePackageMember extends Task {
 	
-	public static final String ERROR_REMOVING = "Error occurred while removing package type";
+	public static final String ERROR_REMOVING = "Error occurred while removing package members";
 	
 	/** path to the current package file **/
 	private File sourceFile;
@@ -27,41 +27,48 @@ public class SFDC_RemovePackageType extends Task {
 	/** metadata type to add it to **/
 	private String metadataType;
 	
-	private Boolean isChatty = false;
+	/** member to add **/
+	private String memberToRemove;
 	
-	public SFDC_RemovePackageType(){
+	private Boolean isChatty;
+	
+	public SFDC_RemovePackageMember(){
 		this.isChatty = false;
 	}
 	
 	public void execute() throws BuildException {
+		
+		if( targetFile == null ) targetFile = sourceFile;
+		
 		XML_Util.checkCanRead( sourceFile );
 		XML_Util.checkCanWrite( targetFile );
 		
 		PackageUtil.checkMetadataType( this.metadataType );
+		PackageUtil.checkMetaMember( this.memberToRemove );
 		
 		Document doc = XML_Util.parseXML_Document( sourceFile );
 		Node container = doc.getFirstChild();
 		
-		String type = null;
 		Boolean foundNode = false;
 		try {
 			NodeList nodes = doc.getElementsByTagName( PackageUtil.TAG_TYPES );
 			Node node = null, targetNode = null, potentialWhitespace = null;
 			for( int i = 0; i < nodes.getLength(); i++ ){
 				node = nodes.item(i);
-				if( XML_Util.doesNodeContainTextNode( node, PackageUtil.TAG_NAME, this.metadataType ) ){
-					//-- this is the node
-					potentialWhitespace = node.getNextSibling();
+				targetNode = PackageUtil.findMemberNode( node, this.metadataType, this.memberToRemove );
+				if( targetNode != null ){
+					potentialWhitespace = targetNode.getNextSibling();
 					if( XML_Util.isEmptyNode( potentialWhitespace )){
-						container.removeChild(potentialWhitespace);
+						node.removeChild(potentialWhitespace);
 					}
-					container.removeChild( node );
+					node.removeChild( targetNode );
 					foundNode = true;
+					//System.out.println( "found node!:" + targetNode );
 				}
 			}
 			
 			if( !foundNode ){
-				System.out.println( "[" + this.metadataType + "] does not exist" );
+				System.out.println( "[" + this.metadataType + "/" + this.memberToRemove + "] does not exist" );
 				return;
 			}
 		} catch( Exception err ){
@@ -97,6 +104,11 @@ public class SFDC_RemovePackageType extends Task {
 	public void setMetadataType( String metadataType ){
 		this.metadataType = metadataType;
 		if( this.metadataType == null ) this.metadataType = "";
+	}
+	
+	public void setMember( String memberToRemove ){
+		this.memberToRemove = memberToRemove;
+		if( this.memberToRemove == null ) this.memberToRemove = "";
 	}
 	
 	public void setIsChatty( Boolean isChatty ){

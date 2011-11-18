@@ -1,4 +1,4 @@
-package com.coolblue.meta;
+package com.modelmetrics.meta;
 
 /**
  *  Object that represents a Salesforce metadata profile document.

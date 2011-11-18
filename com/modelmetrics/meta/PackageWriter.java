@@ -1,4 +1,4 @@
-package com.coolblue.meta;
+package com.modelmetrics.meta;
 
 import java.io.*;
 

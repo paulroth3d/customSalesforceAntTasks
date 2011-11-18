@@ -1,4 +1,4 @@
-package com.coolblue.util;
+package com.modelmetrics.util;
 
 import java.io.*;
 import java.util.*;

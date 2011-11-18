@@ -1,4 +1,4 @@
-package com.coolblue.meta.pack;
+package com.modelmetrics.meta.pack;
 /*
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

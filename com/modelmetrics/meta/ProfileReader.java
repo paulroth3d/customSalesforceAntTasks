@@ -1,4 +1,4 @@
-package com.coolblue.meta;
+package com.modelmetrics.meta;
 
 /**
  *  Class that specializes in reading profiles

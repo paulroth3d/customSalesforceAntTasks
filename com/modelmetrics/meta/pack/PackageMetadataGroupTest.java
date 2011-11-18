@@ -1,6 +1,6 @@
-package com.coolblue.meta.pack;
+package com.modelmetrics.meta.pack;
 
-import com.coolblue.meta.pack.*;
+import com.modelmetrics.meta.pack.*;
 
 import org.junit.*;
 import static org.junit.Assert.*;

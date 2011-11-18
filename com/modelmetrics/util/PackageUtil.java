@@ -1,6 +1,6 @@
-package com.coolblue.util;
+package com.modelmetrics.util;
 
-import com.coolblue.util.XML_Util;
+import com.modelmetrics.util.XML_Util;
 
 import org.w3c.dom.*;
 import java.io.*;
