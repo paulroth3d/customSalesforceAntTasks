@@ -239,7 +239,7 @@ public class XML_Util {
 				nodeValue = XML_Util.safeTrim( attributeNode.getTextContent() );
 				//System.out.println( "checking attributeNode[" + nodeName + ":" + nodeValue + "][" + childNodeName + ":" + childNodeValue + "]");
 				
-				if( childNodeName.equals( nodeName ) && childNodeValue.equals( nodeValue )){
+				if( childNodeName.equalsIgnoreCase( nodeName ) && childNodeValue.equalsIgnoreCase( nodeValue )){
 					return( attributeNode );
 				}
 			}
