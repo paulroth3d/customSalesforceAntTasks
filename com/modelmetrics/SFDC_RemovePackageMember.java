@@ -37,7 +37,6 @@ public class SFDC_RemovePackageMember extends Task {
 	}
 	
 	public void execute() throws BuildException {
-		
 		if( targetFile == null ) targetFile = sourceFile;
 		
 		XML_Util.checkCanRead( sourceFile );
