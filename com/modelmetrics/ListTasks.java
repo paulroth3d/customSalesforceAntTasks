@@ -64,5 +64,23 @@ public class ListTasks extends Task {
 		System.out.println( "	@param sourceFile (String) path of the current package file (file to read from)" );
 		System.out.println( "	@param targetFile (String:default sourceFile) path of the package file to write out to (can be same or different)" );
 		System.out.println( "	@param metadataType (String) - metadata type of the member" );
+		System.out.println( "	" );
+		System.out.println( "SFDC_CompareCollapsed : Task that compares two files on a line by line comparison" );
+		System.out.println( "	@param firstFile (String) Path to the first file to compare" );
+		System.out.println( "	@param secondFile (String) Path to the second file to compare against" );
+		System.out.println( "	@param isChatty (Boolean) Whether it should be chatty as it works" );
+		System.out.println( "	" );
+		System.out.println( "SFDC_CombineCollapsed : Task that combines the second package into the first package" );
+		System.out.println( "	@param firstFile (String) Path to the first file to compare" );
+		System.out.println( "	@param secondFile (String) Path to the second file to compare against" );
+		System.out.println( "	@param targetFile (String) path of the file to write the collapsed file out out to" );
+		System.out.println( "	@param isChatty (Boolean) Whether it should be chatty as it works" );
+		System.out.println( "	" );
+		System.out.println( "SFDC_SubtractCollapsed : Task that removes second package from the first package" );
+		System.out.println( "	@param firstFile (String) Path to the first file to compare" );
+		System.out.println( "	@param secondFile (String) Path to the second file to compare against" );
+		System.out.println( "	@param targetFile (String) path of the file to write the collapsed file out out to" );
+		System.out.println( "	@param isChatty (Boolean) Whether it should be chatty as it works" );
+		System.out.println( "	" );
 	}
 }

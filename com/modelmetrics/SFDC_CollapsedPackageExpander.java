@@ -89,14 +89,14 @@ public class SFDC_CollapsedPackageExpander extends Task {
 			writer.write( "</Package>" );
 		} catch( Exception err ){
 			throw( new BuildException( ERROR_WHILE_EXPANDING + err ));
+		} finally {
+			try {
+				if( writer != null ) writer.close();
+			} catch( Exception err ){}
+			try {
+				if( reader != null ) reader.close();
+			} catch( Exception err ){}
 		}
-		
-		try {
-			if( writer != null ) writer.close();
-		} catch( Exception err ){}
-		try {
-			if( reader != null ) reader.close();
-		} catch( Exception err ){}
 	}
 	
 	//-- getter/setters
