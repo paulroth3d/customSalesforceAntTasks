@@ -1,0 +1,111 @@
+Custom SalesForce Ant Tasks
+===========================
+V1.0
+
+The purpose of this project is to provide custom ant tasks that can be incorporated
+into salesforce ant projects.
+
+To Use
+------
+
+The simplest way to use these tasks is a two step process
+
+1. Add an xml namespace to your project root.
+
+For example:
+
+	<project name="gFRS Ant Deployment" default="help"
+		basedir="."
+		xmlns:sf="http://com.salesforce"
+		xmlns:mm="http://com.modelmetrics"
+	>
+
+This allows tasks defined with the modelmetrics URL to use the 'mm' prefix
+
+2. Define the taskdef so the tasks can be used within the project
+
+For example:
+
+	<taskdef resource="com/modelmetrics/Ant_Lib.properties" uri="http://com.modelmetrics">
+		<classpath>
+			<pathelement location="lib/ant-salesforce-mm.jar" />
+		</classpath>
+	</taskdef>
+	
+Combined, you can then use the custom tasks (defined below)
+
+like this:
+
+		<mm:SFDC_AddPackageMember sourceFile="${source.file}" targetFile="${target.file}"
+			metadataType="${metadata.type}" member="${metadata.member}"
+			isChatty="true"
+		/>
+		
+Custom Task List
+================
+
+SFDC_PackageCollapser : Collapses a salesforce metadata package file to prefix each member by the type
+	@param sourceFile (String) - path to the file to collapse
+	@param targetFile (String) - path to the file to output to
+	@param delimiter (String:default '/') - delimiter to use between the metadata type and the member
+	
+SFDC_CollapsedPackageExpander : Task that expands a collapsed salesforce metadata package file assuming that what is before the delimiter is the type.
+	@param sourceFile (String) - path to the file to expand
+	@param targetFile (String) - path to the file to output to
+	@param delimiter (String:default'/') - delimiter to use between the metadata type and the member
+
+SFDC_ConvertMetadataToFolder : Converts a metdata name to the appropriate 'folder name' (like used in eclipse)
+	(If no translation is found, then an empty string is used)
+	@param metadata (String) - metadata type from salesforce
+	@param targetProperty (String) - property to export the value out to
+
+SFDC_ConvertFolderToMetadata : Converts a metdata 'folder name' (like used in eclipse) to the appropriate folder name.
+	(If no translation is found, then an empty string is used)
+	@param folderName (String) - name of the eclipse style folder
+	@param targetProperty (String) - property to export the value out to
+	
+SFDC_AddPackageMember : Task that adds a member to a Salesforce Metadata package file.
+	If the metadata type does not exist then a new one is added
+	Likewise, if the metadata/type exists then a new one is not added.
+	@param sourceFile (String) path of the current package file (file to read from)
+	@param targetFile (String:default sourceFile) path of the package file to write out to (can be same or different)
+	@param metadataType (String) - metadata type of the member
+	@param memberToAdd (String) - name of the member to add
+
+SFDC_RemovePackageMember : Task that removes a member from a Salesforce Metadata package file.
+	If one does not exist then it prints a warning, but does not stop
+	@param sourceFile (String) path of the current package file (file to read from)
+	@param targetFile (String:default sourceFile) path of the package file to write out to (can be same or different)
+	@param metadataType (String) - metadata type of the member
+	@param memberToAdd (String) - name of the member to add
+	
+SFDC_RemovePackageType : Task that removes an entire Metadata package type
+	@param sourceFile (String) path of the current package file (file to read from)
+	@param targetFile (String:default sourceFile) path of the package file to write out to (can be same or different)
+	@param metadataType (String) - metadata type of the member
+	
+SFDC_CompareCollapsed : Task that compares two files on a line by line comparison
+	@param firstFile (String) Path to the first file to compare
+	@param secondFile (String) Path to the second file to compare against
+	@param isChatty (Boolean) Whether it should be chatty as it works
+	
+SFDC_CombineCollapsed : Task that combines the second package into the first package
+	@param firstFile (String) Path to the first file to compare
+	@param secondFile (String) Path to the second file to compare against
+	@param targetFile (String) path of the file to write the collapsed file out out to
+	@param isChatty (Boolean) Whether it should be chatty as it works
+	
+SFDC_SubtractCollapsed : Task that removes second package from the first package
+	@param firstFile (String) Path to the first file to compare
+	@param secondFile (String) Path to the second file to compare against
+	@param targetFile (String) path of the file to write the collapsed file out out to
+	@param isChatty (Boolean) Whether it should be chatty as it works
+	
+Help Task
+---------
+
+As always, you can use the 'ListTasks' task to echo out this help
+
+	<mm:ListTasks />
+
+This help is then written out to the console
