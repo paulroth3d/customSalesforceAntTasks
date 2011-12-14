@@ -82,5 +82,9 @@ public class ListTasks extends Task {
 		System.out.println( "	@param targetFile (String) path of the file to write the collapsed file out out to" );
 		System.out.println( "	@param isChatty (Boolean) Whether it should be chatty as it works" );
 		System.out.println( "	" );
+		System.out.println( "SFDC_CrudMatrix : Task that creates a CRUD csv matrix based on the profiles in a directory" );
+		System.out.println( "	@param profileDirectory (String) - the path to the directory to search for profiles" );
+		System.out.println( "	@param resultFilePath (String) - path to the csv file that should be written" );
+		System.out.println( "		" );
 	}
 }

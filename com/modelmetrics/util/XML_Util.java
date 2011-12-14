@@ -260,4 +260,16 @@ public class XML_Util {
 		Node resultNode = findChildTextNode( parentNode, childNodeName, childNodeValue );
 		return( resultNode != null );
 	}
+	
+	/**
+	 *  Parses a boolean value from a string
+	 *  @param str
+	 *  @return boolean
+	 **/
+	public static Boolean parseStringToBoolean( String str ){
+		if( str == null ) return( false );
+		
+		str = str.toLowerCase();
+		return( ( "true").equals( str ) );
+	}
 }
