@@ -45,12 +45,12 @@ public class ProfileObjectPermissions {
 	
 	public String toString(){
 		String result = "";
-		result += allowCreate ? "C" : " ";
-		result += allowRead ? "R" : " ";
-		result += allowEdit ? "U" : " ";
-		result += allowDelete ? "D" : " ";
-		result += modifyAllRecords ? "M" : " ";
-		result += viewAllRecords ? "V" : " ";
+		result += allowCreate ? "C" : "_";
+		result += allowRead ? "R" : "_";
+		result += allowEdit ? "U" : "_";
+		result += allowDelete ? "D" : "_";
+		result += modifyAllRecords ? "M" : "_";
+		result += viewAllRecords ? "V" : "_";
 		return( result );
 	}
 }
