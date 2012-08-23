@@ -63,20 +63,26 @@ public class SFDC_CollapsedPackageExpander extends Task {
 			writer.write( "<Package xmlns='http://soap.sforce.com/2006/04/metadata'>" + NEWLINE );
 			
 			while( (line = reader.readLine()) != null ){
+				System.out.println( "found line[" + line + "]" );
+				
 				delimiterIndex = line.indexOf( this.delimiter );
 				if( delimiterIndex < 0 ){
 					if( this.isChatty ) System.out.println( "ignoring line[" + line + "]" );
 				} else {
+					System.out.println( "found delimiter" );
 					type = line.substring( 0, delimiterIndex );
 					member = line.substring( delimiterIndex + delimiterLength);
 					
 					if( currentMember.isSameType( type )){
+						System.out.println( "isSameType" );
 						currentMember.addMember( member );
 					} else {
+						System.out.println( "not same type" );
 						//-- we're starting a new group
 						writer.write( currentMember.toString() );
 						
 						currentMember = new PackageMetadataGroup( type );
+						currentMember.addMember( member );
 					}
 				}
 			}
