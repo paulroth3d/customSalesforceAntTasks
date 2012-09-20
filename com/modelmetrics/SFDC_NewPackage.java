@@ -34,6 +34,8 @@ public class SFDC_NewPackage extends Task {
 		BufferedWriter out = null;
 		
 		try {
+			
+			
 			out = new BufferedWriter( new FileWriter( targetFile ));
 			out.write( "<?xml version='1.0' encoding='UTF-8'?>" ); out.newLine();
 			out.write( "<package xmlns='http://soap.sforce.com/2006/04/metadata'>" ); out.newLine();
@@ -47,6 +49,8 @@ public class SFDC_NewPackage extends Task {
 			try {
 				if( out != null ) out.close();
 			} catch( Exception err2 ){}
+			
+			throw( new BuildException( ERR_COULD_NOT_WRITE + "-" + err.getMessage() ));
 		}
 	}
 	
