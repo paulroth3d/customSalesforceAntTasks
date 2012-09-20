@@ -4,6 +4,7 @@ import com.modelmetrics.meta.pack.PackageMetadataGroup;
 
 import com.modelmetrics.util.XML_Util;
 import com.modelmetrics.util.PackageUtil;
+import com.modelmetrics.util.FileUtil;
 
 import org.w3c.dom.*;
 import java.io.*;
@@ -33,8 +34,8 @@ public class SFDC_CompareCollapsed extends Task {
 	}
 	
 	public void execute() throws BuildException {
-		XML_Util.checkCanRead( firstFile );
-		XML_Util.checkCanRead( secondFile );
+		FileUtil.checkCanRead( firstFile );
+		FileUtil.checkCanRead( secondFile );
 		
 		String NEWLINE = System.getProperty( "line.separator" );
 		//System.out.println( "isChatty[" + isChatty + "]" );

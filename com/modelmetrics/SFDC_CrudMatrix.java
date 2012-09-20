@@ -3,6 +3,7 @@ package com.modelmetrics;
 import com.modelmetrics.util.XML_Util;
 import com.modelmetrics.util.PackageUtil;
 import com.modelmetrics.util.ProfileUtil;
+import com.modelmetrics.util.FileUtil;
 
 import com.modelmetrics.meta.profile.ProfileObjectPermissions;
 
@@ -35,7 +36,7 @@ public class SFDC_CrudMatrix extends Task {
 	private HashSet<String> objectSet;
 	
 	public void execute() throws BuildException {
-		XML_Util.checkCanWrite( resultFilePath );
+		FileUtil.checkCanWrite( resultFilePath );
 		
 		if( profileDirectory == null ){
 			throw( new BuildException( "profileDirectory must be set" ));

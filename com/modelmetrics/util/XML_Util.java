@@ -18,36 +18,6 @@ public class XML_Util {
 	/** Error message provided if there are no child nodes **/
 	public static final String ERROR_NO_CHILDREN = "No children were found";
 	public static final String ERROR_NULL_NODE_NAME = "Child node cannot have a null name";
-	public static final String ERROR_CANNOT_READ = "Cannot read from:";
-	public static final String ERROR_CANNOT_WRITE = "Cannot write to:";
-	
-	/**
-	 *  Checks if the sourceFile can be read from
-	 *  @param sourceFile (File)
-	 *  @throws BuildException - if the file could not be read from
-	**/
-	public static void checkCanRead( File sourceFile ) throws BuildException {
-		if( !sourceFile.exists() || !sourceFile.canRead() ){
-			throw( new BuildException( ERROR_CANNOT_READ + sourceFile ));
-		}
-	}
-	
-	/**
-	 *  Checks if the target file can be written to
-	 *  @param targetFile (File)
-	 *  @throws BuildException - if the file cannot be written to
-	**/
-	public static void checkCanWrite( File targetFile ) throws BuildException {
-		if( !targetFile.exists() ){
-			try {
-				targetFile.createNewFile();
-			} catch( Exception err ){
-				throw( new BuildException( ERROR_CANNOT_WRITE + targetFile ));
-			}
-		} else if( !targetFile.canWrite() ){
-			throw( new BuildException( ERROR_CANNOT_WRITE + targetFile ));
-		}
-	}
 	
 	/**
 	 *  Opens a new Document based on a filePath

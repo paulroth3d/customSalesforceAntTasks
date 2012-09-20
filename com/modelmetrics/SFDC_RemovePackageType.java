@@ -2,6 +2,8 @@ package com.modelmetrics;
 
 import com.modelmetrics.util.XML_Util;
 import com.modelmetrics.util.PackageUtil;
+import com.modelmetrics.util.FileUtil;
+
 
 import org.w3c.dom.*;
 import java.io.*;
@@ -34,8 +36,8 @@ public class SFDC_RemovePackageType extends Task {
 	}
 	
 	public void execute() throws BuildException {
-		XML_Util.checkCanRead( sourceFile );
-		XML_Util.checkCanWrite( targetFile );
+		FileUtil.checkCanRead( sourceFile );
+		FileUtil.checkCanWrite( targetFile );
 		
 		PackageUtil.checkMetadataType( this.metadataType );
 		
@@ -78,7 +80,7 @@ public class SFDC_RemovePackageType extends Task {
 			out = new BufferedWriter( new FileWriter( this.targetFile ));
 			out.write( xmlString );
 		} catch( Exception err ){
-			throw( new BuildException( XML_Util.ERROR_CANNOT_WRITE + this.targetFile ));
+			throw( new BuildException( FileUtil.ERROR_CANNOT_WRITE + this.targetFile ));
 		}
 		try {
 			if( out != null ) out.close();

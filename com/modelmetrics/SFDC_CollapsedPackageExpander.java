@@ -4,6 +4,7 @@ import com.modelmetrics.meta.pack.PackageMetadataGroup;
 
 import com.modelmetrics.util.XML_Util;
 import com.modelmetrics.util.PackageUtil;
+import com.modelmetrics.util.FileUtil;
 
 import org.w3c.dom.*;
 import java.io.*;
@@ -30,17 +31,21 @@ public class SFDC_CollapsedPackageExpander extends Task {
 	/** delimiter used to collapse the package **/
 	private String delimiter;
 	
+	/** version of the sfdc package to use **/
+	private String version;
+	
 	/** whether the expander is chatty (describes ignored lines) **/
 	private Boolean isChatty;
 	
 	public SFDC_CollapsedPackageExpander(){
 		this.isChatty = false;
 		this.delimiter = PackageUtil.DELIMITER;
+		this.version= "25.0";
 	}
 	
 	public void execute() throws BuildException {
-		XML_Util.checkCanRead( sourceFile );
-		XML_Util.checkCanWrite( targetFile );
+		FileUtil.checkCanRead( sourceFile );
+		FileUtil.checkCanWrite( targetFile );
 		
 		PackageUtil.checkDelimiter( this.delimiter );
 		
@@ -90,7 +95,7 @@ public class SFDC_CollapsedPackageExpander extends Task {
 				writer.write( currentMember.toString() );
 			}
 			
-			writer.write( "\t<version>22.0</version>" + NEWLINE );
+			writer.write( "\t<version>" + this.version + "</version>" + NEWLINE );
 			writer.write( "</Package>" );
 		} catch( Exception err ){
 			throw( new BuildException( ERROR_WHILE_EXPANDING + err ));
@@ -115,6 +120,10 @@ public class SFDC_CollapsedPackageExpander extends Task {
 	
 	public void setDelimiter( String delimiter ){
 		this.delimiter = delimiter;
+	}
+	
+	public void setVersion( String version ){
+		this.version = version;	
 	}
 	
 	public void setChatty( Boolean isChatty ){

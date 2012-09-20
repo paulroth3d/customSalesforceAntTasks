@@ -2,6 +2,8 @@ package com.modelmetrics;
 
 import com.modelmetrics.util.XML_Util;
 import com.modelmetrics.util.PackageUtil;
+import com.modelmetrics.util.FileUtil;
+
 
 import org.w3c.dom.*;
 import java.io.*;
@@ -30,8 +32,8 @@ public class SFDC_PackageCollapser extends Task {
 	}
 	
 	public void execute() throws BuildException {
-		XML_Util.checkCanRead( sourceFile );
-		XML_Util.checkCanWrite( targetFile );
+		FileUtil.checkCanRead( sourceFile );
+		FileUtil.checkCanWrite( targetFile );
 		
 		Document doc = XML_Util.parseXML_Document( sourceFile );
 		if( doc == null ) return;
