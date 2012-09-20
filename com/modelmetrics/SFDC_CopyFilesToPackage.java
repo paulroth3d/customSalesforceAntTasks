@@ -176,18 +176,33 @@ public class SFDC_CopyFilesToPackage extends Task {
 
 	
 	//-- getter/setters
+	
+	/**
+	 *  File that contains the addresses of the files to be used in the package.
+	 *  (Such as a subversion or git status)
+	**/
 	public void setListFile( String listFileAddr ){
 		this.listFile = new File( listFileAddr );
 	}
 	
+	/**
+	 *  Folder offset to be considered the 'Base' for the fileList
+	 *  (Defaults to the current directory)
+	**/
 	public void setSourceDir( String sourceDirAddr ){
 		this.sourceDir = new File( sourceDirAddr );
 	}
 	
+	/**
+	 *  Directory of where to create the resulting package
+	**/
 	public void setPackageDir( String packageDirAddr) {
 		this.packageDir = new File( packageDirAddr );
 	}
 	
+	/**
+	 *  SFDC Version to use in the package
+	**/
 	public void setVersion( String version ){
 		this.version = version;
 	}
