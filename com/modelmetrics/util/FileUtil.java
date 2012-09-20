@@ -53,20 +53,33 @@ public class FileUtil {
 	 *  Copies a file from one file to another
 	 *  @param sourceFile (File)
 	 *  @param targetFile (File)
-	 *  @throws FileNotFoundException 
-	 *  @throws SecurityException 
+	 *  @return Boolean - whether the copy was successful or not
 	**/
-	private void copyFile( File sourceFile, File targetFile ) throws IOException, SecurityException, FileNotFoundException {
-		InputStream in = new FileInputStream(sourceFile);
-		OutputStream out = new FileOutputStream(targetFile);
-	
-		// Transfer bytes from in to out
-		byte[] buf = new byte[1024];
-		int len;
-		while ((len = in.read(buf)) > 0) {
-			out.write(buf, 0, len);
+	public static Boolean copyFile( File sourceFile, File targetFile ) {
+		InputStream  in = null;
+		OutputStream out = null;  
+			
+		try {
+			in = new FileInputStream(sourceFile);
+			out = new FileOutputStream(targetFile);
+			
+			// Transfer bytes from in to out
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+
+			return( true );
+		} catch( Exception err ){
+			System.out.println( "Exception occurred while copying:" + err.getMessage() );
+		} finally {
+			try {
+				if( in != null ) in.close();
+				if( out != null ) out.close();
+			} catch( Exception err ){}
 		}
-		in.close();
-		out.close();
+		
+		return( false );
 	}	
 }
