@@ -40,7 +40,7 @@ public class SFDC_CopyFilesToPackage extends Task {
 	
 	public SFDC_CopyFilesToPackage(){
 		this.listFile = null;
-		this.sourceDir = null;
+		this.sourceDir = new File( "." );
 		this.packageDir = null;
 		this.version = "25.0";
 		this.isChatty = false;
@@ -148,6 +148,7 @@ public class SFDC_CopyFilesToPackage extends Task {
 	 *  @throws BuildException if there is a problem
 	**/
 	private void validateArguments(){
+		System.out.println( "sourceDir:" + sourceDir );
 		FileUtil.checkCanRead( this.listFile );
 		FileUtil.checkCanRead( this.sourceDir );
 		
