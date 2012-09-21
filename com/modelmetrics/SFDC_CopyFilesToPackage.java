@@ -15,14 +15,19 @@ import org.apache.tools.ant.Project;
 public class SFDC_CopyFilesToPackage extends Task {
 	
 	public static final String ERR_PACKAGE_DIR_IS_FILE = "Package directory is file:";
-	
 	public static final String ERR_PACKAGE_DIR_CANNOT_BE_CREATED = "Package directory could not be created:";
-	
+	public static final String ERR_READING_IGNORE_FILE = "Error occurred while reading ignore file:";
 	public static final String ERR_WHILE_COPYING = "Error occurred while copying files";
 	public static final String ERR_WHILE_CREATING_PACKAGE = "Error occurred while creating a package";
 
 	/** file that contains the list of files to copy **/
 	private File listFile;
+	
+	/** file that contains the list of folder/files to ignore **/
+	private File ignoreFile;
+	
+	/** set of folder/files to ignore **/
+	private Set<String> ignoreSet;
 	
 	/** Directory of the source files to copy from **/
 	private File sourceDir;
@@ -40,6 +45,7 @@ public class SFDC_CopyFilesToPackage extends Task {
 	
 	public SFDC_CopyFilesToPackage(){
 		this.listFile = null;
+		this.ignoreFile = null;
 		this.sourceDir = new File( "." );
 		this.packageDir = null;
 		this.version = "25.0";
@@ -58,8 +64,11 @@ public class SFDC_CopyFilesToPackage extends Task {
 		BufferedWriter writer = null;
 		String line = null;
 		
+		int folderIndex = 0;
+		int fileIndex = 0;
 		String folderName = null;
 		String metaFolderName = null;
+		String intermediary = null; //-- this can contain additional folders, such as documents, emails, reports
 		String fileName = null;
 		String strippedFileName = null;
 		String targetFile = null;
@@ -86,6 +95,41 @@ public class SFDC_CopyFilesToPackage extends Task {
 		
 		if( this.isChatty ) System.out.println( "sourceDirOffset:" + sourceDirOffset );
 		
+		//-- try to get the list of files to ignore
+		this.ignoreSet = new HashSet<String>();
+		try {
+			//System.out.println( "attempting to read the ignore file" );
+			
+			if( ignoreFile != null && ignoreFile.exists() && ignoreFile.canRead() ){
+				System.out.println( "ignore file found: " + ignoreFile.getPath() );
+				reader = new BufferedReader( new FileReader( this.ignoreFile ));
+				
+				while( (line=reader.readLine()) != null ){
+					if( line != null ){
+						line = line.trim().toLowerCase();
+					} else {
+						line = "";
+					}
+					
+					if( !("".equals(line))){
+						ignoreSet.add( line );
+					}
+				}
+			} else {
+				System.out.println( "could not find ignore file" );
+			}
+		} catch( Exception err ){
+			System.out.println( ERR_READING_IGNORE_FILE + ":" + err.getMessage() );
+		} finally {
+			try {
+				if( reader != null ) reader.close();
+			} catch( Exception err2 ){}
+		}
+		
+		System.out.println( "ignored files[" + this.ignoreSet.size() + "]" );
+		if( isChatty ) System.out.println( this.ignoreSet.toString() );
+		
+		//-- loop through each file
 		try {
 			reader = new BufferedReader( new FileReader( this.listFile ));
 			
@@ -103,33 +147,58 @@ public class SFDC_CopyFilesToPackage extends Task {
 					continue;
 				}
 				
+				//-- take everything after src/ if it exists
+				lineFolderFile = line.split( "\\bsrc/" );
+				if( lineFolderFile != null && lineFolderFile.length == 2 ){
+					line = lineFolderFile[1];
+				}
+				//System.out.println( "line["+ line + "]" );
+				
+				//-- take ONLY lines that have folders
 				lineFolderFile = line.split( "/" );
 				if( lineFolderFile != null && lineFolderFile.length >= 2 ){
 					
-					folderName = lineFolderFile[ lineFolderFile.length - 2];
-					fileName = lineFolderFile[ lineFolderFile.length - 1];
+					folderIndex = line.indexOf( '/' );
+					fileIndex = line.lastIndexOf( "/" );
 					
-					if( isChatty ) System.out.println( "old: " + folderName + "/" + fileName );
-					
-					metaFolderName = PackageUtil.convertFolderToMeta( folderName );
-					strippedFileName = FileUtil.removeExtension( fileName );
-					
-					fileDestination = new File( packageDirOffset + folderName + "/" + fileName );
-					if( isChatty ) System.out.println( "new: " + fileDestination.getPath() );
-					
-					parentFile = fileDestination.getParentFile();
-					if( isChatty ) System.out.println( "target parent directory:" + parentFile.getPath() );
-					parentFile.mkdir();
-					
-					if( !FileUtil.copyFile( fileToCheck, fileDestination )){
-						throw( new BuildException( ERR_WHILE_COPYING + NEWLINE + fileToCheck.getPath() + "	-	" + fileDestination.getPath() ));
+					folderName = line.substring( 0, folderIndex );
+					if( folderIndex < fileIndex ){
+						intermediary = line.substring( folderIndex+1, fileIndex+1 );
+					} else {
+						intermediary = "";
 					}
+					fileName = line.substring( fileIndex + 1 );
 					
-					System.out.println( "copied:" + fileToCheck.getPath() + NEWLINE + "to:" + fileDestination.getPath() );
+					if( isChatty ) System.out.println( "old: " + folderName + intermediary + "/" + fileName );
 					
-					addMemberTask.setMetadataType( metaFolderName );
-					addMemberTask.setMember( strippedFileName );
-					addMemberTask.execute();
+					if( this.ignoreSet.contains( line.toLowerCase() )){
+						if( isChatty ) System.out.println( "ignoring: file[" + line + "]" );
+					} else {
+						metaFolderName = PackageUtil.convertFolderToMeta( folderName );
+						strippedFileName = FileUtil.removeExtension( fileName );
+						
+						fileDestination = new File( packageDirOffset + folderName + "/" + intermediary + fileName );
+						if( isChatty ) System.out.println( "new: " + fileDestination.getPath() );
+						
+						parentFile = fileDestination.getParentFile();
+						if( isChatty ) System.out.println( "target parent directory:" + parentFile.getPath() );
+						parentFile.mkdir();
+						
+						if( !FileUtil.copyFile( fileToCheck, fileDestination )){
+							throw( new BuildException( ERR_WHILE_COPYING + NEWLINE + fileToCheck.getPath() + "	-	" + fileDestination.getPath() ));
+						}
+						
+						if( !FileUtil.copyFile( new File( fileToCheck.getPath() + "-meta.xml" ), new File( fileDestination.getPath() + "-meta.xml" ))){
+							//System.out.println( "could not copy meta file:" + fileToCheck.getPath() + "-meta.xml" );
+						}
+						
+						if( isChatty ) System.out.println( "copied:" + fileToCheck.getPath() + NEWLINE + "to:" + fileDestination.getPath() );
+						if( !isChatty ) System.out.println( "copied:" + fileDestination.getPath() );
+						
+						addMemberTask.setMetadataType( metaFolderName );
+						addMemberTask.setMember( intermediary + strippedFileName );
+						addMemberTask.execute();
+					}
 					
 				} else {
 					if( isChatty ) System.out.println( "File provided does not give the containing folder:" + line );
@@ -148,7 +217,6 @@ public class SFDC_CopyFilesToPackage extends Task {
 	 *  @throws BuildException if there is a problem
 	**/
 	private void validateArguments(){
-		System.out.println( "sourceDir:" + sourceDir );
 		FileUtil.checkCanRead( this.listFile );
 		FileUtil.checkCanRead( this.sourceDir );
 		
@@ -183,6 +251,15 @@ public class SFDC_CopyFilesToPackage extends Task {
 	**/
 	public void setListFile( String listFileAddr ){
 		this.listFile = new File( listFileAddr );
+	}
+	
+	/**
+	 *  File that contains the list of folder/filename pairs that should be ignored
+	 *  (such as classes/MyTestClass.cls)
+	 *  Notice that these files should include their standard folder name and extensions
+	**/
+	public void setIgnoreFile( String ignoreFileAddr ){
+		this.ignoreFile = new File( ignoreFileAddr );
 	}
 	
 	/**

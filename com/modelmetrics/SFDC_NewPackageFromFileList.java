@@ -55,7 +55,11 @@ public class SFDC_NewPackageFromFileList extends Task {
 		String line = null;
 		String[] lineFolderList = null;
 		
+		int folderIndex = 0;
+		int fileIndex = 0;
+		
 		String folderName = null;
+		String intermediary = null;
 		String fileName = null;
 		String metaFolderName = null;
 		String strippedFileName = null;
@@ -82,6 +86,11 @@ public class SFDC_NewPackageFromFileList extends Task {
 					line = "";
 				}
 				
+				lineFolderList = line.split( "\\bsrc/" );
+				if( lineFolderList != null && lineFolderList.length == 2 ){
+					line = lineFolderList[1];
+				}
+				
 				if( isChatty ) System.out.println( "looking at:" + line );
 				
 				if( line != null && !("".equals( line )) ){
@@ -90,18 +99,25 @@ public class SFDC_NewPackageFromFileList extends Task {
 					if( lineFolderList != null && lineFolderList.length >= 2 ){
 						if( isChatty ) System.out.println( "found folder and fileName" );
 						
-						folderName = lineFolderList[ lineFolderList.length - 2];
-						fileName = lineFolderList[ lineFolderList.length - 1];
+						folderIndex = line.indexOf( '/' );
+						fileIndex = line.lastIndexOf( "/" );
+						if( folderIndex < fileIndex ){
+							intermediary = line.substring( folderIndex + 1, fileIndex + 1 );
+						} else {
+							intermediary = "";
+						}
+						folderName = line.substring( 0, folderIndex );
+						fileName = line.substring( fileIndex + 1 );
 						
-						if( isChatty ) System.out.println( "old: " + folderName + "/" + fileName );
+						if( isChatty ) System.out.println( "old: " + folderName + "/" + intermediary + fileName );
 						
 						metaFolderName = PackageUtil.convertFolderToMeta( folderName );
 						strippedFileName = FileUtil.removeExtension( fileName );
 						
-						if( isChatty ) System.out.println( "new: " + metaFolderName + "/" + strippedFileName );
+						if( isChatty ) System.out.println( "new: " + metaFolderName + "/" + intermediary + strippedFileName );
 						
 						addMemberTask.setMetadataType( metaFolderName );
-						addMemberTask.setMember( strippedFileName );
+						addMemberTask.setMember( intermediary + strippedFileName );
 						addMemberTask.execute();
 						
 						System.out.println( "added " + metaFolderName + "/" + strippedFileName );
