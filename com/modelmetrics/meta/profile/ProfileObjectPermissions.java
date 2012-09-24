@@ -1,5 +1,6 @@
 package com.modelmetrics.meta.profile;
 
+import com.modelmetrics.util.ProfileUtil;
 import com.modelmetrics.util.XML_Util;
 
 import java.util.HashMap;
@@ -7,7 +8,7 @@ import java.util.HashMap;
 /**
  *  Object that facilitates working with object permissions from a profile
  **/
-public class ProfileObjectPermissions {
+public class ProfileObjectPermissions implements ProfilePermissions {
 	
 	public static final String NODE_ALLOW_CREATE = "allowCreate";
 	public static final String NODE_ALLOW_DELETE = "allowDelete";
@@ -26,6 +27,14 @@ public class ProfileObjectPermissions {
 	public String object;
 	
 	public ProfileObjectPermissions(){
+	}
+	
+	public String getNodeType(){
+		return( ProfileUtil.NODE_OBJECT_PERMISSIONS );
+	}
+	
+	public String getName(){
+		return( this.object );
 	}
 	
 	public Boolean load( HashMap<String,String> nodeMap ){

@@ -1,11 +1,15 @@
 package com.modelmetrics;
 
+import java.net.URLDecoder;
+
 import com.modelmetrics.util.XML_Util;
 import com.modelmetrics.util.PackageUtil;
 import com.modelmetrics.util.ProfileUtil;
 import com.modelmetrics.util.FileUtil;
 
-import com.modelmetrics.meta.profile.ProfileObjectPermissions;
+import com.modelmetrics.meta.profile.ProfilePermissions;
+import com.modelmetrics.meta.profile.ProfilePermissionCollection;
+import com.modelmetrics.meta.profile.ProfilePermissionFactory;
 
 import org.w3c.dom.*;
 import java.io.*;
@@ -30,12 +34,19 @@ public class SFDC_CrudMatrix extends Task {
 	private File resultFilePath;
 	
 	/** list of profile permissions **/
-	private LinkedList< ProfilePermissions > permissionListings;
+	private LinkedList< ProfilePermissionCollection > permissionListings;
 	
 	/** list of all objects encountered **/
-	private HashSet<String> objectSet;
+	private HashSet<String> columnSet;
+	
+	private String type;
+	
+	public SFDC_CrudMatrix(){
+		this.type = ProfilePermissionFactory.PROFILE_OBJECT;
+	}
 	
 	public void execute() throws BuildException {
+				
 		FileUtil.checkCanWrite( resultFilePath );
 		
 		if( profileDirectory == null ){
@@ -44,8 +55,8 @@ public class SFDC_CrudMatrix extends Task {
 			throw( new BuildException( "profileDirectory does not exist[" + profileDirectory + "]" ));
 		}
 		
-		this.permissionListings = new LinkedList< ProfilePermissions >();
-		this.objectSet = new HashSet<String>();
+		this.permissionListings = new LinkedList< ProfilePermissionCollection >();
+		this.columnSet = new HashSet<String>();
 		
 		//-- iterate through all the files in profileDirectory
 		FileFilter fileFilter = new FileFilter(){
@@ -69,10 +80,10 @@ public class SFDC_CrudMatrix extends Task {
 		
 		//-- construct the csv
 		Iterator<String> itr;
-		String currentObject;
-		Iterator<ProfilePermissions> permissionItr;
-		ProfilePermissions currentPermissions;
-		ProfileObjectPermissions objectPermissions;
+		String currentColumn;
+		Iterator<ProfilePermissionCollection> permissionItr;
+		ProfilePermissionCollection currentPermissions;
+		ProfilePermissions objectPermissions;
 		BufferedWriter writer = null;
 		
 		try {
@@ -80,23 +91,27 @@ public class SFDC_CrudMatrix extends Task {
 			
 			writer.write( "Profile Name" );
 			
-			itr = objectSet.iterator();
+			List<String> columnList = new ArrayList<String>( columnSet );
+			Collections.sort( columnList );
+			itr = columnList.iterator();
+			
 			while( itr.hasNext() ){
 				writer.write( "," + itr.next() );
 			}
 			writer.newLine();
+			
 			
 			permissionItr = this.permissionListings.iterator();
 			while( permissionItr.hasNext() ){
 				currentPermissions = permissionItr.next();
 				writer.write( currentPermissions.profileName );
 				
-				itr = objectSet.iterator();
+				itr = columnList.iterator();
 				while( itr.hasNext() ){
-					currentObject = itr.next();
+					currentColumn = itr.next();
 					writer.write( "," );
-					if( currentPermissions.containsKey( currentObject )){
-						objectPermissions = currentPermissions.get( currentObject );
+					if( currentPermissions.containsKey( currentColumn )){
+						objectPermissions = currentPermissions.get( currentColumn );
 						writer.write( objectPermissions.toString() );
 					} else {
 						writer.write( "-" );
@@ -113,21 +128,6 @@ public class SFDC_CrudMatrix extends Task {
 				if( writer != null ) writer.close();
 			} catch( Exception err ){}
 		}
-		/*
-		ProfileObjectPermissions objectPermissions = null;
-		String objectName = null;
-		Iterator<ProfileObjectPermissions> objectItr = this.permissionListings.iterator();
-		while( objectItr.hasNext() ){
-			objectPermissions = objectItr.next();
-			line = objectPermissions.object;
-			
-			itr = objectSet.iterator();
-			while( itr.hasNext() ){
-				objectName = itr.next();
-				
-			}
-		}
-		*/
 	}
 	
 	private void parseProfile( File profileFile ){
@@ -137,22 +137,26 @@ public class SFDC_CrudMatrix extends Task {
 		String type = null;
 		Boolean foundNode = false;
 		HashMap<String,String> nodeMap = null;
-		ProfileObjectPermissions objPerm = null;
+		ProfilePermissions objPerm = null;
 		
-		ProfilePermissions permissions = new ProfilePermissions( profileFile.getName() );
+		String profileName = profileFile.getName();
+		profileName = URLDecoder.decode( profileName.replaceAll( "\\.[^.]+", "" ));
+		ProfilePermissionCollection permissions = new ProfilePermissionCollection( profileName );
 		
 		try {
-			NodeList nodes = doc.getElementsByTagName( ProfileUtil.NODE_OBJECT_PERMISSIONS );
+			objPerm = ProfilePermissionFactory.build( this.type );
+			
+			NodeList nodes = doc.getElementsByTagName( objPerm.getNodeType() );
 			Node node = null;
 			
 			for( int i = 0; i < nodes.getLength(); i++ ){
 				node = nodes.item(i);
 				
-				objPerm = new ProfileObjectPermissions();
+				objPerm = ProfilePermissionFactory.build( this.type );
 				if( objPerm.load( XML_Util.createTextNodeMap( node ))){
 					//-- imported successfully
-					permissions.put( objPerm.object, objPerm );
-					objectSet.add( objPerm.object );
+					permissions.put( objPerm.getName(), objPerm );
+					columnSet.add( objPerm.getName() );
 				}
 			}
 			permissionListings.add( permissions );
@@ -171,25 +175,7 @@ public class SFDC_CrudMatrix extends Task {
 		this.resultFilePath = new File( path );
 	}
 	
-	private class ProfilePermissions {
-		String profileName;
-		HashMap<String,ProfileObjectPermissions> objectPermissions;
-		
-		ProfilePermissions( String profileName ){
-			this.profileName = profileName;
-			this.objectPermissions = new HashMap<String,ProfileObjectPermissions>();
-		}
-		
-		ProfileObjectPermissions put( String key, ProfileObjectPermissions permissions ){
-			return( this.objectPermissions.put( key, permissions ) );
-		}
-		
-		Boolean containsKey( String key ){
-			return( this.objectPermissions.containsKey( key ));
-		}
-		
-		ProfileObjectPermissions get( String key ){
-			return( this.objectPermissions.get( key ));
-		}
+	public void setType( String type ){
+		this.type = type;
 	}
 }

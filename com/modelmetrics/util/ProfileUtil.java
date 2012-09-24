@@ -5,5 +5,6 @@ package com.modelmetrics.util;
  **/
 public class ProfileUtil {
 	public static final String NODE_OBJECT_PERMISSIONS = "objectPermissions";
-	public static final String NODE_FIELD_LEVEL_SECURITIES = "fieldLevelSecurities"; 
+	//public static final String NODE_FIELD_LEVEL_SECURITIES = "fieldLevelSecurities";
+	public static final String NODE_PAGE_PERMISSIONS = "pageAccesses";
 }
