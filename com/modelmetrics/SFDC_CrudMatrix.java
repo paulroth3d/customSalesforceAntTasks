@@ -96,7 +96,7 @@ public class SFDC_CrudMatrix extends Task {
 			itr = columnList.iterator();
 			
 			while( itr.hasNext() ){
-				writer.write( "," + itr.next() );
+				writer.write( "," + URLDecoder.decode( itr.next() ) );
 			}
 			writer.newLine();
 			
