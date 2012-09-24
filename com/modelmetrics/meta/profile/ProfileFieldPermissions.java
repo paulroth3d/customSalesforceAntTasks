@@ -39,8 +39,14 @@ public class ProfileFieldPermissions implements ProfilePermissions {
 	
 	public String toString(){
 		String result = "";
-		result += this.readable ? "R" : "_";
-		result += this.editable ? "U" : "_";
+		
+		if( this.editable ){
+			result = "read/write";
+		} else if( this.readable ){
+			result = "read";
+		} else {
+			result = "-";
+		}
 		return( result );
 	}
 }
