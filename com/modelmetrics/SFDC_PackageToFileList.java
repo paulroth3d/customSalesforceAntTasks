@@ -17,6 +17,8 @@ import org.apache.tools.ant.Project;
 **/
 public class SFDC_PackageToFileList extends Task {
 	
+	public static final String ERR_SRC_NOT_EXIST = "Source directory does not exist:";
+	
 	public static final String ERR_FILE_LIST_COULD_NOT_BE_CREATED = "target could not be created";
 	
 	public static final String ERR_INVALID_FILE_LIST = "Invalid Package.";
@@ -32,6 +34,9 @@ public class SFDC_PackageToFileList extends Task {
 	
 	/** location of the packageFile to write to **/
 	private File packageFile;
+	
+	/** location of the source (src) directory that contains all the metadata **/
+	private String sourceDir;
 	
 	private String NEWLINE;
 	
@@ -99,7 +104,7 @@ public class SFDC_PackageToFileList extends Task {
 					
 					if( isChatty ) System.out.println( "old: " + metaFolderName + ", new:" + folderName + ", extension:" + extension );
 					
-					newLine = line.replace( "(?i)" + metaFolderName + "/", folderName + "/" ) + extension;
+					newLine = sourceDir + line.replace( metaFolderName + "/", folderName + "/" ) + extension;
 					
 					if( isChatty ) System.out.println( "newLine: " + newLine );
 					
@@ -167,5 +172,25 @@ public class SFDC_PackageToFileList extends Task {
 	
 	public void setChatty( Boolean isChatty ){
 		this.isChatty = isChatty;
+	}
+	
+	public void setSourceDir( String sourceDir ){
+		try {
+			File sourceDirFile = new File( sourceDir );
+			if( !sourceDirFile.exists() ){
+				throw( new BuildException( ERR_SRC_NOT_EXIST + sourceDir ));
+			}
+			
+		} catch( BuildException err ){
+			throw( err );
+		} catch( Exception err ){
+			throw( new BuildException( ERR_SRC_NOT_EXIST + sourceDir ));
+		}
+		
+		if( !sourceDir.endsWith( "/" )){
+			sourceDir = sourceDir + "/";
+		}
+		
+		this.sourceDir = sourceDir;
 	}
 }
