@@ -12,6 +12,9 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 
+//-- TODO: convert files by iterating through all files in a folder
+//-- instead of converting a package to a file list as * is not used
+
 /**
  *  Creates a file list from a package
 **/
