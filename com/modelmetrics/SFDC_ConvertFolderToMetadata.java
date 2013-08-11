@@ -42,6 +42,7 @@ public class SFDC_ConvertFolderToMetadata extends Task {
 		Project p = getProject();
 		
 		String folder = PackageUtil.convertFolderToMeta( this.folderName );
+		System.out.println( "folder[" + folder + "]" );
 		p.setProperty( this.targetProperty, folder );
 	}
 	

@@ -86,5 +86,33 @@ public class ListTasks extends Task {
 		System.out.println( "	@param profileDirectory (String) - the path to the directory to search for profiles" );
 		System.out.println( "	@param resultFilePath (String) - path to the csv file that should be written" );
 		System.out.println( "		" );
+		System.out.println( "SFDC_NewPackage : Task to create a new Package" );
+		System.out.println( "	@param version (Float - ex 25.0) - the metadata version of the package" );
+		System.out.println( "	@param target (String) Path to the file that should be created/cleared" );
+		System.out.println( "		" );
+		System.out.println( "SFDC_CopyFilesToPackage : Task that takes a list of file paths and creates a new deployable package" );
+		System.out.println( "	@param listFile (String) Path to the file that contains the paths of all files that could be copied to a new package" );
+		System.out.println( "	@param ignoreFile (String) Path to the ignore file that contains folder/filename pairs that should be ignored" );
+		System.out.println( "		(such as classes/MyTestClass.cls)" );
+		System.out.println( "	@param sourceDir (String) Path to the folder that is considered the base of the file list" );
+		System.out.println( "	@param packageDir (String) Path to the folder that contains the package and files" );
+		System.out.println( "	@param version (String) metadata version to use" );
+		System.out.println( "	@param chatty (Boolean) Whether the task should be chatty or silent" );
+		System.out.println( "		" );
+		System.out.println( "SFDC_NewPackageFromFileList : Creates a package file from a list of paths given in a file" );
+		System.out.println( "	@param version (Float ex 25.0) - the metadata version to use" );
+		System.out.println( "	@param fileList (String) Path to the fileList" );
+		System.out.println( "	@param target (String) Path to the resulting package" );
+		System.out.println( "	@param chatty (boolean) Whether the task should be chatty or silent" );
+		System.out.println( "		" );
+		System.out.println( "SFDC_GetAllMetadataTypes : Creates a list of all the metadata types known" );
+		System.out.println( "		" );
+		System.out.println( "SFDC_GetAllFolderTypes : Creates a list of all the folders known" );
+		System.out.println( "		" );
+		System.out.println( "SFDC_PackageToFileList : Creates a file list from a package" );
+		System.out.println( "	target (String) path to the file list to write" );
+		System.out.println( "	package (String) path of the package" );
+		System.out.println( "	chatty (Boolean) whether the task is chatty" );
+		System.out.println( "	" );
 	}
 }

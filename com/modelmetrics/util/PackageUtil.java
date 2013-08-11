@@ -25,6 +25,52 @@ public class PackageUtil {
 	public static final String TAG_MEMBERS = "members";
 	public static final String TAG_NAME = "name";
 	
+	public static final String[][] META_MAP = {
+		{ "ActionOverride", "objects", ".object" },
+		{ "AnalyticSnapshot", "analyticsnapshots", ".analyticsnapshot" },
+		{ "ApexClass", "classes", ".cls" },
+		{ "ApexComponent", "components", ".component" },
+		{ "ApexPage", "pages", ".page" },
+		{ "ApexTrigger", "triggers", ".trigger" },
+		{ "ArticleType", "objects", ".object" },
+		{ "BusinessProcess", "objects", ".object" },
+		{ "CustomApplication", "applications", ".app" },
+		{ "CustomField", "objects", ".object" },
+		{ "CustomLabels", "labels", ".label" },
+		{ "CustomObject", "objects", ".object" },
+		{ "CustomObjectTranslation", "objectTranslations", ".objectTranslation" },
+		{ "CustomPageWebLink", "weblinks", ".weblink" },
+		{ "CustomSite", "sites", ".site" },
+		{ "CustomTab", "tabs", ".tab" },
+		{ "Dashboard", "dashboards", ".dashboard" },
+		{ "DataCategoryGroup", "datacategorygroups", ".datacategorygroup" },
+		{ "Document", "document", "" },
+		{ "EmailTemplate", "email", ".email" },
+		{ "EntitlementTemplate", "entitlementTemplates", ".entitlementTemplate" },
+		{ "FieldSet", "objects", ".object" },
+		{ "HomePageComponent", "homePageComponents", ".homePageComponent" },
+		{ "HomePageLayout", "homePageLayouts", ".homePageLayout" },
+		{ "Layout", "layouts", ".layout" },
+		{ "Letterhead", "letterhead", ".letterhead" },
+		{ "ListView", "objects", ".object" },
+		{ "NamedFilter", "objects", ".object" },
+		{ "PermissionSet", "permissionsets", ".permissionset" },
+		{ "Portal", "portals", ".portal" },
+		{ "Profile", "profiles", ".profile" },
+		{ "RecordType", "objects", ".object" },
+		{ "RemoteSiteSetting", "remoteSiteSettings", ".remoteSiteSetting" },
+		{ "Report", "reports", ".report" },
+		{ "ReportType", "reportTypes", ".reportType" },
+		{ "Scontrol", "scontrols", ".scontrol" },
+		{ "SharingReason", "objects", ".object" },
+		{ "SharingRecalculation", "objects", ".object" },
+		{ "StaticResource", "staticResources", ".resource" },
+		{ "Translations", "translations", ".translation" },
+		{ "ValidationRule", "objects", ".object" },
+		{ "Weblink", "objects", ".object" },
+		{ "Workflow", "workflows", ".workflow" }
+	};
+	
 	/**
 	 *  Finds a specific metadata type member in a Document.
 	 *  @param parentNode (Node)
@@ -72,95 +118,18 @@ public class PackageUtil {
 	 *  @return (String)
 	 **/
 	public static String convertMetaToFolder( String meta ){
-		if( ("ActionOverride").equals( meta ) ){
-			return( "objects" );
-		} else if( ("AnalyticSnapshot").equals( meta ) ){
-			return( "analyticsnapshots" );
-		} else if( ("ApexClass").equals( meta ) ){
-			return( "classes" );
-		} else if( ("ApexComponent").equals( meta ) ){
-			return( "components" );
-		} else if( ("ApexPage").equals( meta ) ){
-			return( "pages" );
-		} else if( ("ApexTrigger").equals( meta ) ){
-			return( "triggers" );
-		} else if( ("ArticleType").equals( meta ) ){
-			return( "objects" );
-		} else if( ("BusinessProcess").equals( meta ) ){
-			return( "objects" );
-		} else if( ("CustomApplication").equals( meta ) ){
-			return( "applications" );
-		} else if( ("CustomField").equals( meta ) ){
-			return( "objects" );
-		} else if( ("CustomLabels").equals( meta ) ){
-			return( "labels" );
-		} else if( ("CustomObject").equals( meta ) ){
-			return( "objects" );
-		} else if( ("CustomObjectTranslation").equals( meta ) ){
-			return( "objectTranslations" );
-		} else if( ("CustomPageWebLink").equals( meta ) ){
-			return( "weblinks" );
-		} else if( ("CustomSite").equals( meta ) ){
-			return( "sites" );
-		} else if( ("CustomTab").equals( meta ) ){
-			return( "tabs" );
-		} else if( ("Dashboard").equals( meta ) ){
-			return( "dashboards" );
-		} else if( ("DataCategoryGroup").equals( meta ) ){
-			return( "datacategorygroups" );
-		} else if( ("Document").equals( meta ) ){
-			return( "document" );
-		} else if( ("EmailTemplate").equals( meta ) ){
-			return( "email" );
-		} else if( ("EntitlementTemplate").equals( meta ) ){
-			return( "entitlementTemplates" );
-		} else if( ("FieldSet").equals( meta ) ){
-			return( "objects" );
-		} else if( ("HomePageComponent").equals( meta ) ){
-			return( "homePageComponents" );
-		} else if( ("HomePageLayout").equals( meta ) ){
-			return( "homePageLayouts" );
-		} else if( ("Layout").equals( meta ) ){
-			return( "layouts" );
-		} else if( ("Letterhead").equals( meta ) ){
-			return( "letterhead" );
-		} else if( ("ListView").equals( meta ) ){
-			return( "objects" );
-		} else if( ("NamedFilter").equals( meta ) ){
-			return( "objects" );
-		} else if( ("PermissionSet").equals( meta ) ){
-			return( "permissionsets" );
-		} else if( ("Portal").equals( meta ) ){
-			return( "portals" );
-		} else if( ("Profile").equals( meta ) ){
-			return( "profiles" );
-		} else if( ("RecordType").equals( meta ) ){
-			return( "objects" );
-		} else if( ("RemoteSiteSetting").equals( meta ) ){
-			return( "remoteSiteSettings" );
-		} else if( ("Report").equals( meta ) ){
-			return( "reports" );
-		} else if( ("ReportType").equals( meta ) ){
-			return( "reportTypes" );
-		} else if( ("Scontrol").equals( meta ) ){
-			return( "scontrols" );
-		} else if( ("SharingReason").equals( meta ) ){
-			return( "objects" );
-		} else if( ("SharingRecalculation").equals( meta ) ){
-			return( "objects" );
-		} else if( ("StaticResource").equals( meta ) ){
-			return( "staticResources" );
-		} else if( ("Translations").equals( meta ) ){
-			return( "translations" );
-		} else if( ("ValidationRule").equals( meta ) ){
-			return( "objects" );
-		} else if( ("Weblink").equals( meta ) ){
-			return( "objects" );
-		} else if( ("Workflow").equals( meta ) ){
-			return( "workflows" );
-		} else {
-			return( "" );
+		if( meta == null ){
+			return( null );
 		}
+		meta = meta.toLowerCase();
+		String val = null;
+		for( int i = 0; i < META_MAP.length; i++ ){
+			val = META_MAP[i][0].toLowerCase();
+			if( val.equalsIgnoreCase( meta )){
+				return( META_MAP[i][1] );
+			}
+		}
+		return( "" );
 	}
 	
 	/**
@@ -169,70 +138,106 @@ public class PackageUtil {
 	 *  @return (String)
 	 **/
 	public static String convertFolderToMeta( String folder ){
-		if( ("analyticsnapshots").equals( folder ) ){
-			return( "AnalyticSnapshot" );
-		} else if( ("applications").equals( folder ) ){
-			return( "CustomApplication" );
-		} else if( ("classes").equals( folder ) ){
-			return( "ApexClass" );
-		} else if( ("components").equals( folder ) ){
-			return( "ApexComponent" );
-		} else if( ("dashboards").equals( folder ) ){
-			return( "Dashboard" );
-		} else if( ("datacategorygroups").equals( folder ) ){
-			return( "DataCategoryGroup" );
-		} else if( ("document").equals( folder ) ){
-			return( "Document" );
-		} else if( ("email").equals( folder ) ){
-			return( "EmailTemplate" );
-		} else if( ("entitlementTemplates").equals( folder ) ){
-			return( "EntitlementTemplate" );
-		} else if( ("homePageComponents").equals( folder ) ){
-			return( "HomePageComponent" );
-		} else if( ("homePageLayouts").equals( folder ) ){
-			return( "HomePageLayout" );
-		} else if( ("labels").equals( folder ) ){
-			return( "CustomLabels" );
-		} else if( ("layouts").equals( folder ) ){
-			return( "Layout" );
-		} else if( ("letterhead").equals( folder ) ){
-			return( "Letterhead" );
-		} else if( ("objectTranslations").equals( folder ) ){
-			return( "CustomObjectTranslation" );
-		} else if( ("objects").equals( folder ) ){
-			return( "CustomObject" );
-		} else if( ("pages").equals( folder ) ){
-			return( "ApexPage" );
-		} else if( ("permissionsets").equals( folder ) ){
-			return( "PermissionSet" );
-		} else if( ("portals").equals( folder ) ){
-			return( "Portal" );
-		} else if( ("profiles").equals( folder ) ){
-			return( "Profile" );
-		} else if( ("remoteSiteSettings").equals( folder ) ){
-			return( "RemoteSiteSetting" );
-		} else if( ("reportTypes").equals( folder ) ){
-			return( "ReportType" );
-		} else if( ("reports").equals( folder ) ){
-			return( "Report" );
-		} else if( ("scontrols").equals( folder ) ){
-			return( "Scontrol" );
-		} else if( ("sites").equals( folder ) ){
-			return( "CustomSite" );
-		} else if( ("staticResources").equals( folder ) ){
-			return( "StaticResource" );
-		} else if( ("tabs").equals( folder ) ){
-			return( "CustomTab" );
-		} else if( ("translations").equals( folder ) ){
-			return( "Translations" );
-		} else if( ("triggers").equals( folder ) ){
-			return( "ApexTrigger" );
-		} else if( ("weblinks").equals( folder ) ){
-			return( "CustomPageWebLink" );
-		} else if( ("workflows").equals( folder ) ){
-			return( "Workflow" );
-		} else {
-			return( "" );
-		} 
+		if( folder == null ){
+			return( null );
+		}
+		folder = folder.toLowerCase();
+		String val = null;
+		for( int i = 0; i < META_MAP.length; i++ ){
+			val = META_MAP[i][1].toLowerCase();
+			if( val.equalsIgnoreCase( folder )){
+				return( META_MAP[i][0] );
+			}
+		}
+		return( "" );
+	}
+	
+	/**
+	 *  Converts a metadata type to an extension
+	 *  @param meta (String)
+	 *  @return (String)
+	 **/
+	public static String convertMetaToExtension( String meta ){
+		if( meta == null ){
+			return( null );
+		}
+		meta = meta.toLowerCase();
+		String val = null;
+		for( int i = 0; i < META_MAP.length; i++ ){
+			val = META_MAP[i][0].toLowerCase();
+			if( val.equalsIgnoreCase( meta )){
+				return( META_MAP[i][2] );
+			}
+		}
+		return( "" );
+	}
+	
+	/**
+	 *  Converts a folder name to a file extension
+	 *  @param folder
+	 *  @return (String)
+	 **/
+	public static String convertFolderToExtension( String folder ){
+		if( folder == null ){
+			return( null );
+		}
+		folder = folder.toLowerCase();
+		String val = null;
+		for( int i = 0; i < META_MAP.length; i++ ){
+			val = META_MAP[i][1].toLowerCase();
+			if( val.equalsIgnoreCase( folder )){
+				return( META_MAP[i][2] );
+			}
+		}
+		return( "" );
+	}
+	
+	/**
+	 *  Determines a list of all the meta types available
+	 *  @return String[]
+	**/
+	public static String[] getAllMetaTypes(){
+		LinkedHashSet<String> results = new LinkedHashSet<String>();
+		for( int i = 0; i < META_MAP.length; i++ ){
+			if( META_MAP[i][0] != null && !("").equals( META_MAP[i][0] ) ){
+				results.add( META_MAP[i][0] );
+			}
+		}
+		return( results.toArray( new String[results.size()] ));
+	}
+	
+	/**
+	 *  Determines a list of all the folders available
+	 *  @return String[]
+	**/
+	public static String[] getAllFolderTypes(){
+		LinkedHashSet<String> results = new LinkedHashSet<String>();
+		for( int i = 0; i < META_MAP.length; i++ ){
+			if( META_MAP[i][1] != null && !("").equals( META_MAP[i][1] ) ){
+				results.add( META_MAP[i][1] );
+			}
+		}
+		return( results.toArray( new String[results.size()] ));
+	}
+	
+	public static String convertArrayToString( String[] a ){
+		StringBuilder sb = new StringBuilder();
+		String delimiter = ",";
+		Boolean isFirst = true;
+		
+		if( a != null ){
+			for( String s : a ){
+				if( a != null && !("").equals(s) ){
+					if( isFirst ){
+						isFirst = false;
+					} else {
+						sb.append( delimiter );
+					}
+					sb.append( s );
+				}
+			}
+		}
+		
+		return( sb.toString() );
 	}
 }
