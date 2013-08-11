@@ -100,6 +100,8 @@ public class SFDC_PackageToFileList extends Task {
 				
 				if( lineFolderList.length < 2 ){
 					System.out.println( "invalid line found:" + line );
+				} else if( line.indexOf( '*' ) > -1 ){
+					if( isChatty ) System.out.println( "ignoring * line: " + line );
 				} else {
 					metaFolderName = lineFolderList[0].trim();
 					folderName = PackageUtil.convertMetaToFolder( metaFolderName );
