@@ -101,7 +101,8 @@ public class SFDC_PackageToFileList extends Task {
 					
 					newLine = line.replace( "(?i)" + metaFolderName + "/", folderName + "/" ) + extension;
 					
-					System.out.println( "newLine: " + newLine );
+					if( isChatty ) System.out.println( "newLine: " + newLine );
+					
 					builder.append( newLine ).append( this.NEWLINE );
 				}
 			}
@@ -122,6 +123,8 @@ public class SFDC_PackageToFileList extends Task {
 		try {
 			writer = new BufferedWriter( new FileWriter( this.target ));
 			writer.write( builder.toString() );
+			
+			System.out.println( "Wrote file to: " + this.target );
 			
 		} catch( BuildException err ){
 			throw( err );
