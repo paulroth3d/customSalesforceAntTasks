@@ -71,6 +71,40 @@ public class PackageUtil {
 		{ "Workflow", "workflows", ".workflow" }
 	};
 	
+	public static final String[][] FOLDER_META_MAP = {
+		{ "analyticsnapshots", "AnalyticSnapshot", ".analyticsnapshot" },
+		{ "applications", "CustomApplication", ".app" },
+		{ "classes", "ApexClass", ".cls" },
+		{ "components", "ApexComponent", ".component" },
+		{ "dashboards", "Dashboard", ".dashboard" },
+		{ "datacategorygroups", "DataCategoryGroup", ".datacategorygroup" },
+		{ "document", "Document", "" },
+		{ "email", "EmailTemplate", ".email" },
+		{ "entitlementTemplates", "EntitlementTemplate", ".entitlementTemplate" },
+		{ "homePageComponents", "HomePageComponent", ".homePageComponent" },
+		{ "homePageLayouts", "HomePageLayout", ".homePageLayout" },
+		{ "labels", "CustomLabels", ".label" },
+		{ "layouts", "Layout", ".layout" },
+		{ "letterhead", "Letterhead", ".letterhead" },
+		{ "objectTranslations", "CustomObjectTranslation", ".objectTranslation" },
+		{ "objects", "CustomObject", ".object" },
+		{ "pages", "ApexPage", ".page" },
+		{ "permissionsets", "PermissionSet", ".permissionset" },
+		{ "portals", "Portal", ".portal" },
+		{ "profiles", "Profile", ".profile" },
+		{ "remoteSiteSettings", "RemoteSiteSetting", ".remoteSiteSetting" },
+		{ "reportTypes", "ReportType", ".reportType" },
+		{ "reports", "Report", ".report" },
+		{ "scontrols", "Scontrol", ".scontrol" },
+		{ "sites", "CustomSite", ".site" },
+		{ "staticResources", "StaticResource", ".resource" },
+		{ "tabs", "CustomTab", ".tab" },
+		{ "translations", "Translations", ".translation" },
+		{ "triggers", "ApexTrigger", ".trigger" },
+		{ "weblinks", "CustomPageWebLink", ".weblink" },
+		{ "workflows", "Workflow", ".workflow" }
+	};
+	
 	/**
 	 *  Finds a specific metadata type member in a Document.
 	 *  @param parentNode (Node)
@@ -143,10 +177,10 @@ public class PackageUtil {
 		}
 		folder = folder.toLowerCase();
 		String val = null;
-		for( int i = 0; i < META_MAP.length; i++ ){
-			val = META_MAP[i][1].toLowerCase();
+		for( int i = 0; i < FOLDER_META_MAP.length; i++ ){
+			val = FOLDER_META_MAP[i][0].toLowerCase();
 			if( val.equalsIgnoreCase( folder )){
-				return( META_MAP[i][0] );
+				return( FOLDER_META_MAP[i][1] );
 			}
 		}
 		return( "" );
@@ -183,10 +217,10 @@ public class PackageUtil {
 		}
 		folder = folder.toLowerCase();
 		String val = null;
-		for( int i = 0; i < META_MAP.length; i++ ){
-			val = META_MAP[i][1].toLowerCase();
+		for( int i = 0; i < FOLDER_META_MAP.length; i++ ){
+			val = FOLDER_META_MAP[i][0].toLowerCase();
 			if( val.equalsIgnoreCase( folder )){
-				return( META_MAP[i][2] );
+				return( FOLDER_META_MAP[i][2] );
 			}
 		}
 		return( "" );
