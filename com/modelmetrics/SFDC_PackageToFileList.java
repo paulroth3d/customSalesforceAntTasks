@@ -152,8 +152,8 @@ public class SFDC_PackageToFileList extends Task {
 	}
 	
 	private void validateArguments(){
-		FileUtil.checkCanRead( target );
 		FileUtil.checkCanRead( packageFile );
+		FileUtil.checkCanWrite( target );
 	}
 	
 	//-- getters/setters
