@@ -87,6 +87,7 @@ public class SFDC_CopyFilesToPackage extends Task {
 		
 		
 		String[] lineFolderFile = null;
+		String[] folderSplit = null;
 		
 		String sourceDirOffset = this.sourceDir.getPath() + "/";
 		String packageDirOffset = this.packageDir.getPath() + "/";
@@ -152,7 +153,13 @@ public class SFDC_CopyFilesToPackage extends Task {
 				if( this.isChatty ) System.out.println( "checking for file:" + line );
 				fileToCheck = new File( sourceDirOffset + line );
 				fileToCheck2 = new File( sourceDirOffset + FORCE_OFFSET + line );
-				if( fileToCheck.exists() ){
+				
+				folderSplit = line.split( "/" );
+				
+				if( folderSplit == null || folderSplit.length < 2 || line.trim().startsWith("#") ){
+					if( isChatty ) System.out.println( "ignoring line[" + line + "]" );
+					continue;
+				} else if( fileToCheck.exists() ){
 					
 				} else if( fileToCheck2.exists() ){
 					if( isChatty ) System.out.println( "missing FORCE_OFFSET on line:" + line );
