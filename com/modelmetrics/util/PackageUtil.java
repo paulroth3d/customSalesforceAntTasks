@@ -21,6 +21,8 @@ public class PackageUtil {
 	public static final String ERROR_META_TYPE_BLANK = "MetadataType cannot be blank";
 	public static final String ERROR_META_MEMBER_BLANK = "Member cannot be blank";
 	
+	public static final String ERROR_UNKNOWN_CONVERSION = "Unable to convert:";
+	
 	public static final String TAG_TYPES = "types";
 	public static final String TAG_MEMBERS = "members";
 	public static final String TAG_NAME = "name";

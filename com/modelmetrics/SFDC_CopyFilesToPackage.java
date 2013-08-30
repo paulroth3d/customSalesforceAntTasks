@@ -19,6 +19,7 @@ public class SFDC_CopyFilesToPackage extends Task {
 	public static final String ERR_READING_IGNORE_FILE = "Error occurred while reading ignore file:";
 	public static final String ERR_WHILE_COPYING = "Error occurred while copying files";
 	public static final String ERR_WHILE_CREATING_PACKAGE = "Error occurred while creating a package";
+	public static final String ERR_CANNOT_FIND_FILE = "cannot find file:";
 
 	/** file that contains the list of files to copy **/
 	private File listFile;
@@ -41,10 +42,14 @@ public class SFDC_CopyFilesToPackage extends Task {
 	/** whether the task is chatty **/
 	private Boolean isChatty;
 	
+	/** whether to ignore missing files **/
+	private Boolean shouldIgnoreMissingFiles;
+	
 	private String NEWLINE;
 	
 	public SFDC_CopyFilesToPackage(){
 		this.listFile = null;
+		this.shouldIgnoreMissingFiles = false;
 		this.ignoreFile = null;
 		this.sourceDir = new File( "." );
 		this.packageDir = null;
@@ -76,6 +81,7 @@ public class SFDC_CopyFilesToPackage extends Task {
 		File fileToCheck = null;
 		File fileDestination = null;
 		File parentFile = null;
+		
 		
 		String[] lineFolderFile = null;
 		
@@ -143,8 +149,12 @@ public class SFDC_CopyFilesToPackage extends Task {
 				if( this.isChatty ) System.out.println( "checking for file:" + line );
 				fileToCheck = new File( sourceDirOffset + line );
 				if( !fileToCheck.exists() ){
-					System.out.println( "cannot find file:" + fileToCheck.getPath() );
-					continue;
+					if( this.shouldIgnoreMissingFiles ){
+						System.out.println( ERR_CANNOT_FIND_FILE + fileToCheck.getPath() );
+						continue;
+					} else {
+						throw( new BuildException( ERR_CANNOT_FIND_FILE + fileToCheck.getPath() ));
+					}
 				}
 				
 				//-- take everything after src/ if it exists
@@ -173,16 +183,26 @@ public class SFDC_CopyFilesToPackage extends Task {
 					
 					if( this.ignoreSet.contains( line.toLowerCase() )){
 						if( isChatty ) System.out.println( "ignoring: file[" + line + "]" );
+					} else if( fileName.indexOf( '.' ) < 0 ){
+						if( isChatty ) System.out.println( "seems the following is a folder:" + packageDirOffset + folderName + "/" + fileName );
 					} else {
 						metaFolderName = PackageUtil.convertFolderToMeta( folderName );
 						strippedFileName = FileUtil.removeExtension( fileName );
+						if( metaFolderName == null || metaFolderName.isEmpty() ){
+							throw( new BuildException( PackageUtil.ERROR_UNKNOWN_CONVERSION + folderName ));
+						}
+						//System.out.println( "converting metadatatype for:" + folderName + ":" + metaFolderName );
 						
 						fileDestination = new File( packageDirOffset + folderName + "/" + intermediary + fileName );
 						if( isChatty ) System.out.println( "new: " + fileDestination.getPath() );
+						//if( isChatty ) System.out.println( "packageDirOffset[" + packageDirOffset + "] folderName[" + folderName + "] intermediary[" + intermediary + "] fileName[" + fileName + "]" );
 						
 						parentFile = fileDestination.getParentFile();
 						if( isChatty ) System.out.println( "target parent directory:" + parentFile.getPath() );
-						parentFile.mkdir();
+						parentFile.mkdirs();
+						
+						//if( isChatty ) System.out.println( "fileToCheck:" + fileToCheck.getPath() );
+						//if( isChatty ) System.out.println( "fileDestination:" + fileDestination.getPath() );
 						
 						if( !FileUtil.copyFile( fileToCheck, fileDestination )){
 							throw( new BuildException( ERR_WHILE_COPYING + NEWLINE + fileToCheck.getPath() + "	-	" + fileDestination.getPath() ));
@@ -286,5 +306,9 @@ public class SFDC_CopyFilesToPackage extends Task {
 	
 	public void setChatty( Boolean isChatty ){
 		this.isChatty = isChatty;
+	}
+	
+	public void setIgnoreMissingFiles( Boolean shouldIgnoreMissingFiles ){
+		this.shouldIgnoreMissingFiles = shouldIgnoreMissingFiles;
 	}
 }
