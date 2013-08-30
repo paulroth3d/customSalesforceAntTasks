@@ -20,6 +20,8 @@ public class SFDC_CopyFilesToPackage extends Task {
 	public static final String ERR_WHILE_COPYING = "Error occurred while copying files";
 	public static final String ERR_WHILE_CREATING_PACKAGE = "Error occurred while creating a package";
 	public static final String ERR_CANNOT_FIND_FILE = "cannot find file:";
+	
+	public static final String FORCE_OFFSET = "force/src/";
 
 	/** file that contains the list of files to copy **/
 	private File listFile;
@@ -79,6 +81,7 @@ public class SFDC_CopyFilesToPackage extends Task {
 		String targetFile = null;
 		
 		File fileToCheck = null;
+		File fileToCheck2 = null;
 		File fileDestination = null;
 		File parentFile = null;
 		
@@ -148,7 +151,14 @@ public class SFDC_CopyFilesToPackage extends Task {
 				
 				if( this.isChatty ) System.out.println( "checking for file:" + line );
 				fileToCheck = new File( sourceDirOffset + line );
-				if( !fileToCheck.exists() ){
+				fileToCheck2 = new File( sourceDirOffset + FORCE_OFFSET + line );
+				if( fileToCheck.exists() ){
+					
+				} else if( fileToCheck2.exists() ){
+					if( isChatty ) System.out.println( "missing FORCE_OFFSET on line:" + line );
+					line = FORCE_OFFSET + line;
+					fileToCheck = fileToCheck2;
+				} else {
 					if( this.shouldIgnoreMissingFiles ){
 						System.out.println( ERR_CANNOT_FIND_FILE + fileToCheck.getPath() );
 						continue;
