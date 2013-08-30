@@ -56,6 +56,10 @@ public class FileUtil {
 	 *  @return Boolean - whether the copy was successful or not
 	**/
 	public static Boolean copyFile( File sourceFile, File targetFile ) {
+		return( copyFile( sourceFile, targetFile, false ) );
+	}
+	
+	public static Boolean copyFile( File sourceFile, File targetFile, Boolean ignoreMissing ){
 		InputStream  in = null;
 		OutputStream out = null;  
 			
@@ -72,7 +76,9 @@ public class FileUtil {
 
 			return( true );
 		} catch( Exception err ){
-			System.out.println( "Exception occurred while copying:" + err.getMessage() );
+			if( !ignoreMissing ){
+				System.out.println( "Exception occurred while copying:" + err.getMessage() );
+			}
 		} finally {
 			try {
 				if( in != null ) in.close();

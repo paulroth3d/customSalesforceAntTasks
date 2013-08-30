@@ -218,7 +218,7 @@ public class SFDC_CopyFilesToPackage extends Task {
 							throw( new BuildException( ERR_WHILE_COPYING + NEWLINE + fileToCheck.getPath() + "	-	" + fileDestination.getPath() ));
 						}
 						
-						if( !FileUtil.copyFile( new File( fileToCheck.getPath() + "-meta.xml" ), new File( fileDestination.getPath() + "-meta.xml" ))){
+						if( !FileUtil.copyFile( new File( fileToCheck.getPath() + "-meta.xml" ), new File( fileDestination.getPath() + "-meta.xml" ), true )){
 							//System.out.println( "could not copy meta file:" + fileToCheck.getPath() + "-meta.xml" );
 						}
 						
