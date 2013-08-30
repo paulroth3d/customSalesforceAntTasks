@@ -78,7 +78,7 @@ public class PackageUtil {
 		{ "components", "ApexComponent", ".component" },
 		{ "dashboards", "Dashboard", ".dashboard" },
 		{ "datacategorygroups", "DataCategoryGroup", ".datacategorygroup" },
-		{ "document", "Document", "" },
+		{ "documents", "Document", "" },
 		{ "email", "EmailTemplate", ".email" },
 		{ "entitlementTemplates", "EntitlementTemplate", ".entitlementTemplate" },
 		{ "homePageComponents", "HomePageComponent", ".homePageComponent" },
