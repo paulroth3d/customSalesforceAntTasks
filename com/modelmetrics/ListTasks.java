@@ -98,6 +98,10 @@ public class ListTasks extends Task {
 		System.out.println( "	@param packageDir (String) Path to the folder that contains the package and files" );
 		System.out.println( "	@param version (String) metadata version to use" );
 		System.out.println( "	@param chatty (Boolean) Whether the task should be chatty or silent" );
+		System.out.println( "	@param shouldIgnoreMissingFiles [Boolean] whether missing files are accepted, or should stop the process" );
+		System.out.println( "	@param optionalSourceOffset [String] Comma separated list of relative paths to add to SourceDir to find the file" );
+		System.out.println( "		(this provides much more flexibility in terms of how packageLists can be written)" );
+		System.out.println( "		(so both 'sourceDir + fileList line', 'sourceDir + 'force/src' + fileList line, etc. can be considered)" );
 		System.out.println( "		" );
 		System.out.println( "SFDC_NewPackageFromFileList : Creates a package file from a list of paths given in a file" );
 		System.out.println( "	@param version (Float ex 25.0) - the metadata version to use" );

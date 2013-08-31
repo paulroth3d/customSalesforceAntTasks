@@ -21,8 +21,6 @@ public class SFDC_CopyFilesToPackage extends Task {
 	public static final String ERR_WHILE_CREATING_PACKAGE = "Error occurred while creating a package";
 	public static final String ERR_CANNOT_FIND_FILE = "cannot find file:";
 	
-	public static final String FORCE_OFFSET = "force/src/";
-
 	/** file that contains the list of files to copy **/
 	private File listFile;
 	
@@ -34,6 +32,23 @@ public class SFDC_CopyFilesToPackage extends Task {
 	
 	/** Directory of the source files to copy from **/
 	private File sourceDir;
+	
+	/** Optional relative path from the source dir that can also be tried
+		this allows full path location, such as "force/src/classes/MyClass.cls"
+		or relative locations, such as "classes/MyClass.cls"
+		to both be accepted as package lists.
+		
+		Allows the task to support finding files from
+		'sourceDir + packageList line' or from
+		'sourceDir + optionalSourceOffset + packageList Line' as both valid paths.
+		
+		<p>Occasionally, package lists can be generated based on different base
+		directories.  Such as version control may provide file lists several
+		levels above the 'src' directory.</p>
+		
+		<p>As implied, this is an optional property</p>
+	**/
+	private String optionalSourceOffset[];
 	
 	/** Directory to create the package in **/
 	private File packageDir;
@@ -57,6 +72,7 @@ public class SFDC_CopyFilesToPackage extends Task {
 		this.packageDir = null;
 		this.version = "25.0";
 		this.isChatty = false;
+		this.optionalSourceOffset = new String[0];
 	}
 	
 	/**
@@ -79,6 +95,7 @@ public class SFDC_CopyFilesToPackage extends Task {
 		String fileName = null;
 		String strippedFileName = null;
 		String targetFile = null;
+		String optionalOffset = null;
 		
 		File fileToCheck = null;
 		File fileToCheck2 = null;
@@ -152,7 +169,6 @@ public class SFDC_CopyFilesToPackage extends Task {
 				
 				if( this.isChatty ) System.out.println( "checking for file:" + line );
 				fileToCheck = new File( sourceDirOffset + line );
-				fileToCheck2 = new File( sourceDirOffset + FORCE_OFFSET + line );
 				
 				folderSplit = line.split( "/" );
 				
@@ -161,16 +177,33 @@ public class SFDC_CopyFilesToPackage extends Task {
 					continue;
 				} else if( fileToCheck.exists() ){
 					
-				} else if( fileToCheck2.exists() ){
-					if( isChatty ) System.out.println( "missing FORCE_OFFSET on line:" + line );
-					line = FORCE_OFFSET + line;
-					fileToCheck = fileToCheck2;
 				} else {
+					//-- file is not found by the source directory, check optional offsets
+					fileToCheck = null;
+					if( this.optionalSourceOffset != null ){
+						for( int i = 0; i < this.optionalSourceOffset.length && fileToCheck == null; i++ ){
+							optionalOffset = this.optionalSourceOffset[i];
+							
+							fileToCheck2 = new File( sourceDirOffset + optionalOffset + line );
+							//System.out.println( "optionalOffset:" + optionalOffset );
+							if( fileToCheck2.exists() ){
+								if( isChatty ) System.out.println( "missing FORCE_OFFSET on line:" + line + ", adding:" + optionalOffset );
+								line = optionalOffset + line;
+								fileToCheck = fileToCheck2;
+								break;
+							} else {
+								System.out.println( "did not find file:" + fileToCheck2.getPath() );
+							}
+						}
+					}
+				}
+				
+				if( fileToCheck == null ){
 					if( this.shouldIgnoreMissingFiles ){
 						System.out.println( ERR_CANNOT_FIND_FILE + fileToCheck.getPath() );
 						continue;
 					} else {
-						throw( new BuildException( ERR_CANNOT_FIND_FILE + fileToCheck.getPath() ));
+						throw( new BuildException( ERR_CANNOT_FIND_FILE + line ));
 					}
 				}
 				
@@ -327,5 +360,23 @@ public class SFDC_CopyFilesToPackage extends Task {
 	
 	public void setIgnoreMissingFiles( Boolean shouldIgnoreMissingFiles ){
 		this.shouldIgnoreMissingFiles = shouldIgnoreMissingFiles;
+	}
+	
+	public void setOptionalSourceOffset( String offsetList ){
+		this.optionalSourceOffset = new String[0];
+		if( offsetList != null ){
+			this.optionalSourceOffset = offsetList.split( "," );
+			String offset = null;
+			for( int i = 0; i < this.optionalSourceOffset.length; i++ ){
+				offset = this.optionalSourceOffset[i];
+				if( offset != null ){
+					offset = offset.trim();
+					if( !offset.endsWith( "/" )){
+						offset = offset + "/";
+					}
+					this.optionalSourceOffset[i] = offset;
+				}
+			}
+		}
 	}
 }
