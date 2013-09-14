@@ -41,15 +41,20 @@ public class Success extends Task {
 		System.out.println( this.msg );
 		System.exit(0);
 	}
-	
+	/*
 	public void addText( String msg ){
 		if( msg == null ){
 			msg = "";
 		}
 		this.msg = msg;
 	}
+	*/
 	
 	public void setIsAbort( Boolean isAbort ){
 		this.isAbort = isAbort == true;
+	}
+	
+	public void setMsg( String msg ){
+		this.msg = msg;
 	}
 }
