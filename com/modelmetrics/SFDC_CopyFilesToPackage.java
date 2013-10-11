@@ -20,6 +20,7 @@ public class SFDC_CopyFilesToPackage extends Task {
 	public static final String ERR_WHILE_COPYING = "Error occurred while copying files";
 	public static final String ERR_WHILE_CREATING_PACKAGE = "Error occurred while creating a package";
 	public static final String ERR_CANNOT_FIND_FILE = "cannot find file:";
+	public static final String ERR_MISSING_EXTENSION = " --  is it missing an extension?";
 	
 	/** file that contains the list of files to copy **/
 	private File listFile;
@@ -200,10 +201,10 @@ public class SFDC_CopyFilesToPackage extends Task {
 				
 				if( fileToCheck == null ){
 					if( this.shouldIgnoreMissingFiles ){
-						System.out.println( ERR_CANNOT_FIND_FILE + fileToCheck.getPath() );
+						System.out.println( ERR_CANNOT_FIND_FILE + fileToCheck.getPath() + ERR_MISSING_EXTENSION );
 						continue;
 					} else {
-						throw( new BuildException( ERR_CANNOT_FIND_FILE + line ));
+						throw( new BuildException( ERR_CANNOT_FIND_FILE + line + ERR_MISSING_EXTENSION ));
 					}
 				}
 				

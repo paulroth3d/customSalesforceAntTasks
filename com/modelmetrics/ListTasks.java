@@ -119,6 +119,12 @@ public class ListTasks extends Task {
 		System.out.println( "	chatty (Boolean) whether the task is chatty" );
 		System.out.println( "	" );
 		System.out.println( "Success : Successfully stops executions without using ant fail" );
+		System.out.println( "	msg (String) Message to provide to the end user" );
+		System.out.println( "	isAbort (Boolean) Whether the code ended unexpectedly" );
+		System.out.println( "	" );
+		System.out.println( "Halt : Successfully stops executions without using ant fail" );
+		System.out.println( "	msg (String) Message to provide to the end user" );
+		System.out.println( "	" );
 		System.out.println( "		" );
 	}
 }
