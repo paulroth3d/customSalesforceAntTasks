@@ -19,7 +19,7 @@ public class SFDC_NewPackageFromFileList extends Task {
 	
 	public static final String ERR_PACKAGE_COULD_NOT_BE_CREATED = "Package could not be created";
 	
-	public static final String ERR_INVALID_FILE_LIST = "Invalid file list. Expecting at least FOLDERNAME/FILENAME, but found:";
+	public static final String ERR_INVALID_FILE_LIST = "Entry does not appear to be a valid fileList metadata entry. Expecting at least FOLDERNAME/FILENAME, but found:";
 	
 	/** version of the package **/
 	private String version;
@@ -111,7 +111,7 @@ public class SFDC_NewPackageFromFileList extends Task {
 						
 						if( isChatty ) System.out.println( "old: " + folderName + "/" + intermediary + fileName );
 						
-						metaFolderName = PackageUtil.convertFolderToMeta( folderName );
+						metaFolderName = PackageUtil.convertFolderToMeta( folderName, fileName );
 						strippedFileName = FileUtil.removeExtension( fileName );
 						
 						if( isChatty ) System.out.println( "new: " + metaFolderName + "/" + intermediary + strippedFileName );

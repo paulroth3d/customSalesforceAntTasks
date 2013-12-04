@@ -27,6 +27,39 @@ public class PackageUtil {
 	public static final String TAG_MEMBERS = "members";
 	public static final String TAG_NAME = "name";
 	
+	public static final String SETTINGS = "settings";
+	
+	public static final String[][] SETTINGS_MAP = {
+		{ "Account.settings", "AccountSettings" },
+		{ "Activities.settings", "ActivitiesSettings" },
+		{ "Address.settings", "AddressSettings" },
+		{ "BusinessHours.settings", "BusinessHoursSettings" },
+		{ "Case.settings", "CaseSettings" },
+		{ "ChatterAnswers.settings", "ChatterAnswersSettings" },
+		{ "Company.settings", "CompanySettings" },
+		{ "Contract.settings", "ContractSettings" },
+		{ "Entitlement.settings", "EntitlementSettings" },
+		{ "Forecasting.settings", "ForecastingSettings" },
+		{ "Ideas.settings", "IdeasSettings" },
+		{ "Knowledge.settings", "KnowledgeSettings" },
+		{ "LiveAgent.settings", "LiveAgentSettings" },
+		{ "Mobile.settings", "MobileSettings" },
+		{ "Opportunity.settings", "OpportunitySettings" },
+		{ "Product.settings", "ProductSettings" },
+		{ "Quote.settings", "QuoteSettings" },
+		{ "Security.settings", "SecuritySettings" }
+	};
+	
+	public static String KNOWN_SETTINGS_TYPES = null;
+	
+	static { 
+		String[] knownTypes = new String[ SETTINGS_MAP.length];
+		for( int i = 0; i < SETTINGS_MAP.length; i++ ){
+			knownTypes[i] = SETTINGS_MAP[i][1];
+		}
+		KNOWN_SETTINGS_TYPES = Arrays.toString( knownTypes );
+	}
+	
 	public static final String[][] META_MAP = {
 		{ "ActionOverride", "objects", ".object" },
 		{ "AnalyticSnapshot", "analyticsnapshots", ".analyticsnapshot" },
@@ -49,6 +82,7 @@ public class PackageUtil {
 		{ "Document", "document", "" },
 		{ "EmailTemplate", "email", ".email" },
 		{ "EntitlementTemplate", "entitlementTemplates", ".entitlementTemplate" },
+		{ "EscalationRule", "escalationRules", ".escalationRules" },
 		{ "FieldSet", "objects", ".object" },
 		{ "HomePageComponent", "homePageComponents", ".homePageComponent" },
 		{ "HomePageLayout", "homePageLayouts", ".homePageLayout" },
@@ -63,7 +97,9 @@ public class PackageUtil {
 		{ "RemoteSiteSetting", "remoteSiteSettings", ".remoteSiteSetting" },
 		{ "Report", "reports", ".report" },
 		{ "ReportType", "reportTypes", ".reportType" },
+		{ "Role", "roles", ".role" },
 		{ "Scontrol", "scontrols", ".scontrol" },
+		{ "Settings", "settings", ".settings" },
 		{ "SharingReason", "objects", ".object" },
 		{ "SharingRecalculation", "objects", ".object" },
 		{ "StaticResource", "staticResources", ".resource" },
@@ -71,6 +107,27 @@ public class PackageUtil {
 		{ "ValidationRule", "objects", ".object" },
 		{ "Weblink", "objects", ".object" },
 		{ "Workflow", "workflows", ".workflow" }
+		
+		/*
+		{ "AccountSettings", "settings", ".settings" },
+		{ "ActivitiesSettings", "settings", ".settings" },
+		{ "AddressSettings", "settings", ".settings" },
+		{ "BusinessHoursSettings", "settings", ".settings" },
+		{ "CaseSettings", "settings", ".settings" },
+		{ "ChatterAnswersSettings", "settings", ".settings" },
+		{ "CompanySettings", "settings", ".settings" },
+		{ "ContractSettings", "settings", ".settings" },
+		{ "EntitlementSettings", "settings", ".settings" },
+		{ "ForecastingSettings", "settings", ".settings" },
+		{ "IdeasSettings", "settings", ".settings" },
+		{ "KnowledgeSettings", "settings", ".settings" },
+		{ "LiveAgentSettings", "settings", ".settings" },
+		{ "MobileSettings", "settings", ".settings" },
+		{ "OpportunitySettings", "settings", ".settings" },
+		{ "ProductSettings", "settings", ".settings" },
+		{ "QuoteSettings", "settings", ".settings" },
+		{ "SecuritySettings", "settings", ".settings" }
+		*/
 	};
 	
 	public static final String[][] FOLDER_META_MAP = {
@@ -83,6 +140,7 @@ public class PackageUtil {
 		{ "documents", "Document", "" },
 		{ "email", "EmailTemplate", ".email" },
 		{ "entitlementTemplates", "EntitlementTemplate", ".entitlementTemplate" },
+		{ "escalationRules", "EscalationRule", ".escalationRules" },
 		{ "homePageComponents", "HomePageComponent", ".homePageComponent" },
 		{ "homePageLayouts", "HomePageLayout", ".homePageLayout" },
 		{ "labels", "CustomLabels", ".label" },
@@ -97,7 +155,9 @@ public class PackageUtil {
 		{ "remoteSiteSettings", "RemoteSiteSetting", ".remoteSiteSetting" },
 		{ "reportTypes", "ReportType", ".reportType" },
 		{ "reports", "Report", ".report" },
+		{ "roles", "Role", ".role" },
 		{ "scontrols", "Scontrol", ".scontrol" },
+		{ "settings", "Settings", ".settings" },
 		{ "sites", "CustomSite", ".site" },
 		{ "staticResources", "StaticResource", ".resource" },
 		{ "tabs", "CustomTab", ".tab" },
@@ -174,11 +234,37 @@ public class PackageUtil {
 	 *  @return (String)
 	 **/
 	public static String convertFolderToMeta( String folder ){
+		return( convertFolderToMeta( folder, null ));
+	}
+	
+	public static String convertFolderToMeta( String folder, String fileName ){
 		if( folder == null ){
 			return( null );
 		}
 		folder = folder.toLowerCase();
 		String val = null;
+		
+		/*
+		if( SETTINGS.equalsIgnoreCase( folder )){
+			//-- TODO
+			
+			if( fileName != null ){
+				fileName = fileName.trim();
+				for( int i = 0; i < SETTINGS_MAP.length; i++ ){
+					val = SETTINGS_MAP[i][0];
+					if( val.equalsIgnoreCase( fileName )){
+						//System.out.println( "found:" + SETTINGS_MAP[i][1] );
+						return( SETTINGS_MAP[i][1] );
+					}
+				}
+				
+				System.out.println( "Settings file[" + fileName + "] does not appear to be a known Settings type:" + KNOWN_SETTINGS_TYPES );
+			} else {
+				//-- can't do anything for now
+				System.out.println( "Ignoring [" + folder + "][" + fileName + "] as this folder includes multiple types." );
+			}
+		} else {
+		*/
 		for( int i = 0; i < FOLDER_META_MAP.length; i++ ){
 			val = FOLDER_META_MAP[i][0].toLowerCase();
 			if( val.equalsIgnoreCase( folder )){
@@ -214,11 +300,17 @@ public class PackageUtil {
 	 *  @return (String)
 	 **/
 	public static String convertFolderToExtension( String folder ){
+		return( convertFolderToExtension( folder, null ) );
+	}
+	
+	public static String convertFolderToExtension( String folder, String fileName ){
 		if( folder == null ){
 			return( null );
 		}
 		folder = folder.toLowerCase();
 		String val = null;
+		
+		//-- although settings can be multiple types, they all have the same extension.
 		for( int i = 0; i < FOLDER_META_MAP.length; i++ ){
 			val = FOLDER_META_MAP[i][0].toLowerCase();
 			if( val.equalsIgnoreCase( folder )){
