@@ -245,6 +245,9 @@ public class PackageUtil {
 		String val = null;
 		
 		/*
+		//-- Settings can be multiple types even though they are within the same folder
+		//-- for now they can all be the same metadata type though.
+		
 		if( SETTINGS.equalsIgnoreCase( folder )){
 			//-- TODO
 			
@@ -265,6 +268,7 @@ public class PackageUtil {
 			}
 		} else {
 		*/
+		
 		for( int i = 0; i < FOLDER_META_MAP.length; i++ ){
 			val = FOLDER_META_MAP[i][0].toLowerCase();
 			if( val.equalsIgnoreCase( folder )){
