@@ -109,6 +109,11 @@ public class ListTasks extends Task {
 		System.out.println( "	@param target (String) Path to the resulting package" );
 		System.out.println( "	@param chatty (boolean) Whether the task should be chatty or silent" );
 		System.out.println( "		" );
+		System.out.println( "SFDC_ApplyFileListToPackage : Merges a file list into a package" );
+		System.out.println( "	listFile (String) Path of the list file to be merged in" );
+		System.out.println( "	ignoreFile (String) - Optional file that includes things to be ignored" );
+		System.out.println( "	package (String) - Path to the package to be merged in" );
+		System.out.println( "		" );
 		System.out.println( "SFDC_GetAllMetadataTypes : Creates a list of all the metadata types known" );
 		System.out.println( "		" );
 		System.out.println( "SFDC_GetAllFolderTypes : Creates a list of all the folders known" );
@@ -125,6 +130,7 @@ public class ListTasks extends Task {
 		System.out.println( "Halt : Successfully stops executions without using ant fail" );
 		System.out.println( "	msg (String) Message to provide to the end user" );
 		System.out.println( "	" );
+		
 		System.out.println( "		" );
 	}
 }
