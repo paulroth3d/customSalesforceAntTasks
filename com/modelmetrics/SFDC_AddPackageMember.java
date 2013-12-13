@@ -69,6 +69,16 @@ public class SFDC_AddPackageMember extends Task {
 				} else if( XML_Util.doesNodeContainTextNode( node, PackageUtil.TAG_NAME, this.metadataType )){
 					typeNode = node;
 				}
+				
+				//-- find if * is included
+				targetNode = PackageUtil.findMemberNode( node, this.metadataType, "*" );
+				if( targetNode != null ){
+					//-- already exists so don't add it again.
+					System.out.println( "[" + this.metadataType + "/" + this.memberToAdd + "] is ignored as all objects are included" );
+					return;
+				} else if( XML_Util.doesNodeContainTextNode( node, PackageUtil.TAG_NAME, this.metadataType )){
+					typeNode = node;
+				}
 			}
 			
 			Node memberNode = doc.createElement( PackageUtil.TAG_MEMBERS );
