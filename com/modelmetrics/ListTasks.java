@@ -45,6 +45,16 @@ public class ListTasks extends Task {
 		System.out.println( "	@param folderName (String) - name of the eclipse style folder" );
 		System.out.println( "	@param targetProperty (String) - property to export the value out to" );
 		System.out.println( "	" );
+		System.out.println( "SFDC_ConvertMetadataToExtension : Converts a metdata name to the appropriate file extension" );
+		System.out.println( "	(If no translation is found, then an empty string is used)" );
+		System.out.println( "	@param metadata (String) - metadata type from salesforce" );
+		System.out.println( "	@param targetProperty (String) - property to export the value out to" );
+		System.out.println( "" );
+		System.out.println( "SFDC_ConvertFolderToExtension : Converts a folder to the appropriate file extension" );
+		System.out.println( "	(If no translation is found, then an empty string is used)" );
+		System.out.println( "	@param folderName (String) - name of the eclipse style folder" );
+		System.out.println( "	@param targetProperty (String) - property to export the value out to" );
+		System.out.println( "" );
 		System.out.println( "SFDC_AddPackageMember : Task that adds a member to a Salesforce Metadata package file." );
 		System.out.println( "	If the metadata type does not exist then a new one is added" );
 		System.out.println( "	Likewise, if the metadata/type exists then a new one is not added." );

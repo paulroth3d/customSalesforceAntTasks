@@ -1,9 +1,8 @@
 package com.modelmetrics;
 
-import com.modelmetrics.util.PackageUtil;
-
 import com.modelmetrics.util.XML_Util;
 import com.modelmetrics.util.PackageUtil;
+import com.modelmetrics.util.FileUtil;
 
 import org.w3c.dom.*;
 import java.io.*;
@@ -14,13 +13,13 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 
 /**
- *  Converts a folder name to the appropriate metadata name.
+ *  Converts a metdata folder name to the appropriate extension.
  *  <p>If no translation is found, then an empty string is used</p>
 **/
-public class SFDC_ConvertFolderToExtension extends Task {
+public class SFDC_ConvertMetadataToExtension extends Task {
 	
 	/** metadata type **/
-	private String folderName;
+	private String meta;
 	
 	/** target property to set the value into **/
 	private String targetProperty;
@@ -32,8 +31,8 @@ public class SFDC_ConvertFolderToExtension extends Task {
 	**/
 	public void execute() throws BuildException {
 		
-		if( folderName == null ){
-			throw( new BuildException( "folderName is required" ));
+		if( meta == null ){
+			throw( new BuildException( "meta is required" ));
 		}
 		if( targetProperty == null ){
 			throw( new BuildException( "targetProperty is required" ));
@@ -41,14 +40,13 @@ public class SFDC_ConvertFolderToExtension extends Task {
 		
 		Project p = getProject();
 		
-		String folder = PackageUtil.convertFolderToExtension( this.folderName );
-		//System.out.println( "folder[" + folder + "]" );
+		String folder = PackageUtil.convertMetaToExtension( this.meta );
 		p.setProperty( this.targetProperty, folder );
 	}
 	
 	//-- getter setter
-	public void setFolderName( String folderName ){
-		this.folderName = folderName;
+	public void setMetadata( String meta ){
+		this.meta = meta;
 	}
 	
 	public void setTargetProperty( String targetProperty ){
