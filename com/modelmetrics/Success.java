@@ -59,4 +59,8 @@ public class Success extends Task {
 	public void setMsg( String msg ){
 		this.msg = msg;
 	}
+	
+	public void addText( String msg ){
+		this.msg = getProject().replaceProperties(msg);
+	}
 }
