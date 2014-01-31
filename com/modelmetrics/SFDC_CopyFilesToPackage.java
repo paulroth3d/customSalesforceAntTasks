@@ -238,7 +238,7 @@ public class SFDC_CopyFilesToPackage extends Task {
 						if( isChatty ) System.out.println( "seems the following is a folder:" + packageDirOffset + folderName + "/" + fileName );
 					} else {
 						metaFolderName = PackageUtil.convertFolderToMeta( folderName, fileName );
-						strippedFileName = FileUtil.removeExtension( fileName );
+						strippedFileName = FileUtil.removeExtension( folderName, fileName );
 						if( metaFolderName == null || metaFolderName.isEmpty() ){
 							throw( new BuildException( PackageUtil.ERROR_UNKNOWN_CONVERSION + folderName ));
 						}

@@ -43,7 +43,7 @@ public class FileUtil {
 	 *  @param fileName (String)
 	 *  @return String
 	**/
-	public static String removeExtension( String fileName ){
+	public static String removeExtension( String folderName, String fileName ){
 		if( fileName == null ) return( fileName );
 		
 		return( fileName.replaceAll( "\\.[^.]+$", "" ));

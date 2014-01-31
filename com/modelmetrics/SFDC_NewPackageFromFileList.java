@@ -112,7 +112,7 @@ public class SFDC_NewPackageFromFileList extends Task {
 						if( isChatty ) System.out.println( "old: " + folderName + "/" + intermediary + fileName );
 						
 						metaFolderName = PackageUtil.convertFolderToMeta( folderName, fileName );
-						strippedFileName = FileUtil.removeExtension( fileName );
+						strippedFileName = FileUtil.removeExtension( folderName, fileName );
 						
 						if( isChatty ) System.out.println( "new: " + metaFolderName + "/" + intermediary + strippedFileName );
 						

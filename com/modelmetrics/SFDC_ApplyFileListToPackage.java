@@ -175,7 +175,7 @@ public class SFDC_ApplyFileListToPackage extends Task {
 						if( isChatty ) System.out.println( "seems the following is a folder:" + folderName + "/" + fileName );
 					} else {
 						metaFolderName = PackageUtil.convertFolderToMeta( folderName, fileName );
-						strippedFileName = FileUtil.removeExtension( fileName );
+						strippedFileName = FileUtil.removeExtension( folderName, fileName );
 						if( metaFolderName == null || metaFolderName.isEmpty() ){
 							throw( new BuildException( PackageUtil.ERROR_UNKNOWN_CONVERSION + folderName ));
 						}
