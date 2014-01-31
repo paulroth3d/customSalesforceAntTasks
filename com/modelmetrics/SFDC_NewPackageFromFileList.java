@@ -93,7 +93,7 @@ public class SFDC_NewPackageFromFileList extends Task {
 				
 				if( isChatty ) System.out.println( "looking at:" + line );
 				
-				if( line != null && !("".equals( line )) ){
+				if( line != null && !("".equals( line )) && !(line.trim().startsWith("#")) ){
 					
 					lineFolderList = line.split( "/" );
 					if( lineFolderList != null && lineFolderList.length >= 2 ){
