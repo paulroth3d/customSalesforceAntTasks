@@ -201,7 +201,7 @@ public class SFDC_CopyFilesToPackage extends Task {
 				
 				if( fileToCheck == null ){
 					if( this.shouldIgnoreMissingFiles ){
-						System.out.println( ERR_CANNOT_FIND_FILE + fileToCheck.getPath() + ERR_MISSING_EXTENSION );
+						System.out.println( ERR_CANNOT_FIND_FILE + ( fileToCheck != null ? fileToCheck.getPath() : "" ) + ERR_MISSING_EXTENSION );
 						continue;
 					} else {
 						throw( new BuildException( ERR_CANNOT_FIND_FILE + line + ERR_MISSING_EXTENSION ));
