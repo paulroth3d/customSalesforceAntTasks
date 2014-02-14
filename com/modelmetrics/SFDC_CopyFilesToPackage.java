@@ -106,6 +106,7 @@ public class SFDC_CopyFilesToPackage extends Task {
 		
 		String[] lineFolderFile = null;
 		String[] folderSplit = null;
+		String folder = null;
 		
 		String sourceDirOffset = this.sourceDir.getPath() + "/";
 		String packageDirOffset = this.packageDir.getPath() + "/";
@@ -246,14 +247,14 @@ public class SFDC_CopyFilesToPackage extends Task {
 						
 						fileDestination = new File( packageDirOffset + folderName + "/" + intermediary + fileName );
 						if( isChatty ) System.out.println( "new: " + fileDestination.getPath() );
-						//if( isChatty ) System.out.println( "packageDirOffset[" + packageDirOffset + "] folderName[" + folderName + "] intermediary[" + intermediary + "] fileName[" + fileName + "]" );
+						if( isChatty ) System.out.println( "packageDirOffset[" + packageDirOffset + "] folderName[" + folderName + "] intermediary[" + intermediary + "] fileName[" + fileName + "]" );
 						
 						parentFile = fileDestination.getParentFile();
 						if( isChatty ) System.out.println( "target parent directory:" + parentFile.getPath() );
 						parentFile.mkdirs();
 						
-						//if( isChatty ) System.out.println( "fileToCheck:" + fileToCheck.getPath() );
-						//if( isChatty ) System.out.println( "fileDestination:" + fileDestination.getPath() );
+						if( isChatty ) System.out.println( "fileToCheck:" + fileToCheck.getPath() );
+						if( isChatty ) System.out.println( "fileDestination:" + fileDestination.getPath() );
 						
 						if( !FileUtil.copyFile( fileToCheck, fileDestination )){
 							throw( new BuildException( ERR_WHILE_COPYING + NEWLINE + fileToCheck.getPath() + "	-	" + fileDestination.getPath() ));
@@ -262,6 +263,9 @@ public class SFDC_CopyFilesToPackage extends Task {
 						if( !FileUtil.copyFile( new File( fileToCheck.getPath() + "-meta.xml" ), new File( fileDestination.getPath() + "-meta.xml" ), true )){
 							//System.out.println( "could not copy meta file:" + fileToCheck.getPath() + "-meta.xml" );
 						}
+						
+						//-- iterate through all intermediaries
+						addIntermediaries( isChatty, packageDirOffset, folderName, intermediary );
 						
 						if( isChatty ) System.out.println( "copied:" + fileToCheck.getPath() + NEWLINE + "to:" + fileDestination.getPath() );
 						if( !isChatty ) System.out.println( "copied:" + fileDestination.getPath() );
@@ -280,6 +284,49 @@ public class SFDC_CopyFilesToPackage extends Task {
 			throw( err );
 		} catch( Exception err ){
 			throw( new BuildException( ERR_WHILE_COPYING + NEWLINE + err.getMessage() ));
+		}
+	}
+	
+	/**
+	 *  Adds intermediary folders
+	 *  @param isChatty (boolean)
+	 *  @param packageDirOffset (String)
+	 *  @param folderName (String)
+	 *  @param intermediary (String)
+	**/
+	private void addIntermediaries( boolean isChatty, String packageDirOffset, String folderName, String intermediary ){
+		if( intermediary == null || intermediary.isEmpty() ){
+			if( isChatty ) System.out.println( "no intermediaries" );
+			return;
+		}
+		
+		if( isChatty ) System.out.println( "start intermediaries[" + intermediary + "]" );
+		
+		intermediary = intermediary.replaceAll( "^\\s*/", "" );
+		intermediary = intermediary.replaceAll( "/\\s*$", "" );
+		
+		if( isChatty ) System.out.println( "trimmed intermediaries[" + intermediary + "]" );
+		
+		String[] folderSplit = intermediary.split( "/" );
+		String folder = null;
+		
+		File fileToCheck = null;
+		File fileDestination = null;
+		
+		String intermediaryBuild = "";
+		for( int i = 0; i < folderSplit.length; i++ ){
+			folder = folderSplit[i];
+			
+			if( folder == null || folder.isEmpty() ){
+				continue;
+			}
+			
+			if( i > 0 ) intermediaryBuild += "/";
+			intermediaryBuild += folder;
+			
+			if( isChatty ) System.out.println( "intermediaryBuild [" + intermediaryBuild + "]" );
+			
+			
 		}
 	}
 	
