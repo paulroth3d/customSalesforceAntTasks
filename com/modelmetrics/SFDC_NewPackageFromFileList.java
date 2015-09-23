@@ -93,7 +93,10 @@ public class SFDC_NewPackageFromFileList extends Task {
 				
 				if( isChatty ) System.out.println( "looking at:" + line );
 				
-				if( line != null && !("".equals( line )) && !(line.trim().startsWith("#")) ){
+				if( line == null || "".equals( line ) || line.trim().startsWith("#") ){
+					if( isChatty ) System.out.println( "ignoring line[" + line + "]" );
+				} else if( line.endsWith( ".xml" ) ){
+				} else {
 					
 					lineFolderList = line.split( "/" );
 					if( lineFolderList != null && lineFolderList.length >= 2 ){
@@ -106,14 +109,23 @@ public class SFDC_NewPackageFromFileList extends Task {
 						} else {
 							intermediary = "";
 						}
-						folderName = line.substring( 0, folderIndex );
-						fileName = line.substring( fileIndex + 1 );
+						folderName = line.substring( 0, folderIndex ).trim();
+						fileName = line.substring( fileIndex + 1 ).trim();
 						
 						if( isChatty ) System.out.println( "old: " + folderName + "/" + intermediary + fileName );
 						
-						metaFolderName = PackageUtil.convertFolderToMeta( folderName, fileName );
-						strippedFileName = FileUtil.removeExtension( folderName, fileName );
+						if( PackageUtil.AURA_FOLDER.equals( folderName ) &&
+							lineFolderList.length > 1
+						){
+							metaFolderName = PackageUtil.convertFolderToMeta( folderName, null );
+							strippedFileName = lineFolderList[1];
+							intermediary = "";
+						} else {
 						
+							metaFolderName = PackageUtil.convertFolderToMeta( folderName, fileName );
+							strippedFileName = FileUtil.removeExtension( folderName, fileName );
+						}
+							
 						if( isChatty ) System.out.println( "new: " + metaFolderName + "/" + intermediary + strippedFileName );
 						
 						addMemberTask.setMetadataType( metaFolderName );
