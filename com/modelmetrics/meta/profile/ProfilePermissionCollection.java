@@ -4,11 +4,19 @@ import java.util.HashMap;
 
 public class ProfilePermissionCollection {
 	
+	public String DEFAULT_TYPE = "Profile";
+	
 	public String profileName;
+	public String type;
+	
 	public HashMap<String,ProfilePermissions> profilePermissions;
 	
-	public ProfilePermissionCollection( String profileName ){
+	public ProfilePermissionCollection( String profileName, String type ){
 		this.profileName = profileName;
+		this.type = type;
+		if( this.type == null ){
+			this.type = DEFAULT_TYPE;
+		}
 		this.profilePermissions = new HashMap<String,ProfilePermissions>();
 	}
 	

@@ -27,8 +27,17 @@ public class SFDC_CrudMatrix extends Task {
 	
 	public static final String ERROR_PROCESSING = "Error occurred while processing:";
 	
+	public static final String SUFFIX_PROFILE = ".profile";
+	public static final String SUFFIX_PERMISSION_SET = ".permissionset";
+	
+	public static final String TYPE_PROFILE = "Profile";
+	public static final String TYPE_PERMISSION_SET = "PermissionSet";
+	
 	/** path to the directory that contains the profiles **/
 	private File profileDirectory;
+	
+	/** path to the directory that contains the permission sets **/
+	private File permissionDirectory;
 	
 	/** path to the result file **/
 	private File resultFilePath;
@@ -49,6 +58,18 @@ public class SFDC_CrudMatrix extends Task {
 				
 		FileUtil.checkCanWrite( resultFilePath );
 		
+		try {
+			if( permissionDirectory == null ){
+				//-- ignore for now
+			} else if( !permissionDirectory.exists() ){
+				permissionDirectory = null;
+			} else {
+				FileUtil.checkCanRead( permissionDirectory );
+			}
+		} catch( Exception err ){
+			permissionDirectory = null;
+		}
+		
 		if( profileDirectory == null ){
 			throw( new BuildException( "profileDirectory must be set" ));
 		} else if( !profileDirectory.exists() ){
@@ -63,11 +84,11 @@ public class SFDC_CrudMatrix extends Task {
 			public boolean accept( File f, String fileName ){
 				if( fileName != null ) fileName = fileName.toLowerCase();
 				
-				return( fileName.endsWith( ".profile" ) );
+				return( fileName.endsWith( SUFFIX_PROFILE ) );
 			}
 			public boolean accept( File f ){
 				String fileName = f.getName();
-				return( fileName.endsWith( ".profile" ));
+				return( fileName.endsWith( SUFFIX_PROFILE ));
 			}
 		};
 		File[] profileFiles = profileDirectory.listFiles( fileFilter );
@@ -76,7 +97,29 @@ public class SFDC_CrudMatrix extends Task {
 			parseProfile( profileFile );
 		}
 		
-		//System.out.println( this.permissionListings );
+		//-- iterate through all the files in the PERMISSION directory
+		if( permissionDirectory != null ){
+			//System.out.println( "permission directory not null" );
+			fileFilter = new FileFilter(){
+				public boolean accept( File f, String fileName ){
+					if( fileName != null ) fileName = fileName.toLowerCase();
+					
+					return( fileName.endsWith( SUFFIX_PERMISSION_SET ));
+				}
+				
+				public boolean accept( File f ){
+					String fileName = f.getName();
+					return( fileName.endsWith( SUFFIX_PERMISSION_SET ) );
+				}
+			};
+			
+			//System.out.println( this.permissionListings );
+			File[] permissionSetFiles = permissionDirectory.listFiles( fileFilter );
+			for( File permissionSetFile : permissionSetFiles ){
+				System.out.println( "found file[" + permissionSetFile + "]" );
+				parseProfile( permissionSetFile );
+			}
+		}
 		
 		//-- construct the csv
 		Iterator<String> itr;
@@ -90,6 +133,7 @@ public class SFDC_CrudMatrix extends Task {
 			writer = new BufferedWriter( new FileWriter( this.resultFilePath ));
 			
 			writer.write( "Profile Name" );
+			writer.write( ",Type" );
 			
 			List<String> columnList = new ArrayList<String>( columnSet );
 			Collections.sort( columnList );
@@ -105,6 +149,8 @@ public class SFDC_CrudMatrix extends Task {
 			while( permissionItr.hasNext() ){
 				currentPermissions = permissionItr.next();
 				writer.write( currentPermissions.profileName );
+				writer.write( "," );
+				writer.write( currentPermissions.type );
 				
 				itr = columnList.iterator();
 				while( itr.hasNext() ){
@@ -138,10 +184,19 @@ public class SFDC_CrudMatrix extends Task {
 		Boolean foundNode = false;
 		HashMap<String,String> nodeMap = null;
 		ProfilePermissions objPerm = null;
+		String profileType = TYPE_PROFILE;
 		
 		String profileName = profileFile.getName();
+		if( profileName.endsWith( SUFFIX_PERMISSION_SET ) ){
+			profileType = TYPE_PERMISSION_SET;
+		} else {
+			profileType = TYPE_PROFILE;
+		}
+		
 		profileName = URLDecoder.decode( profileName.replaceAll( "\\.[^.]+", "" ));
-		ProfilePermissionCollection permissions = new ProfilePermissionCollection( profileName );
+		profileName = profileName.replaceAll( "_", " " );
+		
+		ProfilePermissionCollection permissions = new ProfilePermissionCollection( profileName, profileType );
 		
 		try {
 			objPerm = ProfilePermissionFactory.build( this.type );
@@ -169,6 +224,10 @@ public class SFDC_CrudMatrix extends Task {
 	//-- getters/setters
 	public void setProfileDirectory( String path ){
 		this.profileDirectory = new File( path );
+	}
+	
+	public void setPermissionDirectory( String path ){
+		this.permissionDirectory = new File( path );
 	}
 	
 	public void setResultFilePath( String path ){
