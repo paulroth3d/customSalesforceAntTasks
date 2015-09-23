@@ -88,11 +88,15 @@ public class SFDC_CopyFilesToPackage extends Task {
 		BufferedWriter writer = null;
 		String line = null;
 		
+		int auraIndex = 0;
+		int auraFolderIndex = 0;
+		
 		int folderIndex = 0;
 		int fileIndex = 0;
 		String folderName = null;
 		String metaFolderName = null;
 		String intermediary = null; //-- this can contain additional folders, such as documents, emails, reports
+		String auraComponentName = null;
 		String fileName = null;
 		String strippedFileName = null;
 		String targetFile = null;
@@ -103,9 +107,15 @@ public class SFDC_CopyFilesToPackage extends Task {
 		File fileDestination = null;
 		File parentFile = null;
 		
+		File folderToCheck = null;
+		String folderToCheckPath = null;
+		File auraComponentFile = null;
+		File[] auraComponentFiles = null;
 		
 		String[] lineFolderFile = null;
 		String[] folderSplit = null;
+		
+		HashSet<String> auraComponentsAdded = new HashSet<String>();
 		
 		String sourceDirOffset = this.sourceDir.getPath() + "/";
 		String packageDirOffset = this.packageDir.getPath() + "/";
@@ -167,7 +177,7 @@ public class SFDC_CopyFilesToPackage extends Task {
 				} else {
 					line = "";
 				}
-				
+								
 				if( this.isChatty ) System.out.println( "checking for file:" + line );
 				fileToCheck = new File( sourceDirOffset + line );
 				
@@ -232,7 +242,57 @@ public class SFDC_CopyFilesToPackage extends Task {
 					
 					if( isChatty ) System.out.println( "old: " + folderName + intermediary + "/" + fileName );
 					
-					if( this.ignoreSet.contains( line.toLowerCase() )){
+					//-- check if its an aura component
+					if( PackageUtil.AURA_FOLDER.equalsIgnoreCase( folderName ) &&
+						lineFolderFile.length > 1
+					){
+						if( isChatty ) System.out.println( "appears that line[" + line + "] is an aura component" );
+						
+						auraComponentName = lineFolderFile[1];
+						
+						if( auraComponentsAdded.contains( auraComponentName )){
+							if( isChatty ) System.out.println( "found duplicated request for aura component[" + auraComponentName + "]" );
+						} else {
+							
+							metaFolderName = PackageUtil.convertFolderToMeta( PackageUtil.AURA_FOLDER, null );
+							
+							auraIndex = fileToCheck.getPath().indexOf( PackageUtil.AURA_FOLDER + "/" );
+							auraIndex += ( PackageUtil.AURA_FOLDER + "/" + auraComponentName ).length();
+							
+							folderToCheckPath = fileToCheck.getPath().substring( 0, auraIndex );
+							folderToCheck = new File( folderToCheckPath );
+							
+							//System.out.println( "auraComponentName[" + auraComponentName +
+							//	"] metaFolderName[" + metaFolderName + 
+							//	"] path[" + fileToCheck.getPath() +
+							//	"] folderToCheckPath[" + folderToCheckPath +
+							//	"]" );
+							
+							parentFile = new File( packageDirOffset + PackageUtil.AURA_FOLDER + "/" + auraComponentName );
+							parentFile.mkdirs();
+							
+							auraComponentFiles = folderToCheck.listFiles();
+							for( int i = 0; i < auraComponentFiles.length; i++ ){
+								auraComponentFile = auraComponentFiles[i];
+								
+								//-- for now, assume that the component folder is a single depth
+								fileDestination = new File( parentFile.getPath() + "/" + auraComponentFile.getName() );
+								//System.out.println( "fileToCheck[" + auraComponentFile.getPath() +
+								//	"] targetFile[" + fileDestination.getPath() + 
+								//	"]" );
+								if( !FileUtil.copyFile( auraComponentFile, fileDestination )){
+									throw( new BuildException( ERR_WHILE_COPYING + NEWLINE + fileToCheck.getPath() + "	-	" + fileDestination.getPath() ));
+								}
+							}
+														
+							addMemberTask.setMetadataType( metaFolderName );
+							addMemberTask.setMember( auraComponentName );
+							addMemberTask.execute();
+							
+							auraComponentsAdded.add( auraComponentName );
+						}
+					
+					} else if( this.ignoreSet.contains( line.toLowerCase() )){
 						if( isChatty ) System.out.println( "ignoring: file[" + line + "]" );
 					} else if( fileName.indexOf( '.' ) < 0 ){
 						if( isChatty ) System.out.println( "seems the following is a folder:" + packageDirOffset + folderName + "/" + fileName );

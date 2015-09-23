@@ -29,6 +29,8 @@ public class PackageUtil {
 	
 	public static final String SETTINGS = "settings";
 	
+	public static final String AURA_FOLDER = "aura";
+	
 	public static final String[][] SETTINGS_MAP = {
 		{ "Account.settings", "AccountSettings" },
 		{ "Activities.settings", "ActivitiesSettings" },
@@ -110,7 +112,8 @@ public class PackageUtil {
 		{ "Translations", "translations", ".translation" },
 		{ "ValidationRule", "objects", ".object" },
 		{ "Weblink", "objects", ".object" },
-		{ "Workflow", "workflows", ".workflow" }
+		{ "Workflow", "workflows", ".workflow" },
+		{ "AuraDefinitionBundle", "aura", ".aura" }
 		
 		/*
 		{ "AccountSettings", "settings", ".settings" },
@@ -172,7 +175,8 @@ public class PackageUtil {
 		{ "translations", "Translations", ".translation" },
 		{ "triggers", "ApexTrigger", ".trigger" },
 		{ "weblinks", "CustomPageWebLink", ".weblink" },
-		{ "workflows", "Workflow", ".workflow" }
+		{ "workflows", "Workflow", ".workflow" },
+		{ "aura", "AuraDefinitionBundle", ".aura" }
 	};
 	
 	/**
