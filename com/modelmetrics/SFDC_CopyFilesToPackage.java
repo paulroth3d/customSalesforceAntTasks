@@ -266,34 +266,40 @@ public class SFDC_CopyFilesToPackage extends Task {
 							folderToCheckPath = fileToCheck.getPath().substring( 0, auraIndex );
 							folderToCheck = new File( folderToCheckPath );
 							
-							//System.out.println( "auraComponentName[" + auraComponentName +
-							//	"] metaFolderName[" + metaFolderName + 
-							//	"] path[" + fileToCheck.getPath() +
-							//	"] folderToCheckPath[" + folderToCheckPath +
-							//	"]" );
-							
-							parentFile = new File( packageDirOffset + PackageUtil.AURA_FOLDER + "/" + auraComponentName );
-							parentFile.mkdirs();
-							
-							auraComponentFiles = folderToCheck.listFiles();
-							for( int i = 0; i < auraComponentFiles.length; i++ ){
-								auraComponentFile = auraComponentFiles[i];
-								
-								//-- for now, assume that the component folder is a single depth
-								fileDestination = new File( parentFile.getPath() + "/" + auraComponentFile.getName() );
-								//System.out.println( "fileToCheck[" + auraComponentFile.getPath() +
-								//	"] targetFile[" + fileDestination.getPath() + 
+							if( this.ignoreSet.contains( folderName + "/" + auraComponentName ) ||
+								this.ignoreSet.contains( folderName + "/" + auraComponentName + ".aura" )
+							){
+								System.out.println( "ignoring aura file:" + auraComponentName );
+							} else {
+								//System.out.println( "auraComponentName[" + auraComponentName +
+								//	"] metaFolderName[" + metaFolderName + 
+								//	"] path[" + fileToCheck.getPath() +
+								//	"] folderToCheckPath[" + folderToCheckPath +
 								//	"]" );
-								if( !FileUtil.copyFile( auraComponentFile, fileDestination )){
-									throw( new BuildException( ERR_WHILE_COPYING + NEWLINE + fileToCheck.getPath() + "	-	" + fileDestination.getPath() ));
+								
+								parentFile = new File( packageDirOffset + PackageUtil.AURA_FOLDER + "/" + auraComponentName );
+								parentFile.mkdirs();
+								
+								auraComponentFiles = folderToCheck.listFiles();
+								for( int i = 0; i < auraComponentFiles.length; i++ ){
+									auraComponentFile = auraComponentFiles[i];
+									
+									//-- for now, assume that the component folder is a single depth
+									fileDestination = new File( parentFile.getPath() + "/" + auraComponentFile.getName() );
+									//System.out.println( "fileToCheck[" + auraComponentFile.getPath() +
+									//	"] targetFile[" + fileDestination.getPath() + 
+									//	"]" );
+									if( !FileUtil.copyFile( auraComponentFile, fileDestination )){
+										throw( new BuildException( ERR_WHILE_COPYING + NEWLINE + fileToCheck.getPath() + "	-	" + fileDestination.getPath() ));
+									}
 								}
+															
+								addMemberTask.setMetadataType( metaFolderName );
+								addMemberTask.setMember( auraComponentName );
+								addMemberTask.execute();
+								
+								auraComponentsAdded.add( auraComponentName );
 							}
-														
-							addMemberTask.setMetadataType( metaFolderName );
-							addMemberTask.setMember( auraComponentName );
-							addMemberTask.execute();
-							
-							auraComponentsAdded.add( auraComponentName );
 						}
 					
 					} else if( this.ignoreSet.contains( line.toLowerCase() )){
