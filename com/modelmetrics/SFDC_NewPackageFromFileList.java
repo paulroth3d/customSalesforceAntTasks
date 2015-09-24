@@ -86,6 +86,10 @@ public class SFDC_NewPackageFromFileList extends Task {
 					line = "";
 				}
 				
+				if( line.endsWith( ".aura" ) ){
+					line = line.substring( 0, line.lastIndexOf( ".aura" ));
+				}
+				
 				lineFolderList = line.split( "\\bsrc/" );
 				if( lineFolderList != null && lineFolderList.length == 2 ){
 					line = lineFolderList[1];
@@ -132,9 +136,9 @@ public class SFDC_NewPackageFromFileList extends Task {
 						addMemberTask.setMember( intermediary + strippedFileName );
 						addMemberTask.execute();
 						
-						System.out.println( "added " + metaFolderName + "/" + strippedFileName );
+						if( isChatty ) System.out.println( "added " + metaFolderName + "/" + strippedFileName );
 					} else {
-						throw( new BuildException( ERR_INVALID_FILE_LIST + "[" + line + "]" ));
+						System.out.println( ERR_INVALID_FILE_LIST + " - Ignoring:" + line );
 					}
 				}
 			}

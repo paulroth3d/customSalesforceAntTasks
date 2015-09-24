@@ -177,6 +177,10 @@ public class SFDC_CopyFilesToPackage extends Task {
 				} else {
 					line = "";
 				}
+				
+				if( line.endsWith( ".aura" ) ){
+					line = line.substring( 0, line.lastIndexOf( ".aura" ));
+				}
 								
 				if( this.isChatty ) System.out.println( "checking for file:" + line );
 				fileToCheck = new File( sourceDirOffset + line );
