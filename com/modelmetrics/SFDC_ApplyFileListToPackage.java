@@ -169,6 +169,17 @@ public class SFDC_ApplyFileListToPackage extends Task {
 					
 					if( isChatty ) System.out.println( "old: " + folderName + intermediary + "/" + fileName );
 					
+					if( PackageUtil.AURA_FOLDER.equals( folderName ) &&
+						lineFolderFile.length > 1
+					){
+						if( isChatty ) System.out.println( "appears [" + line + "] is an aura bundle" );
+						fileName = lineFolderFile[1];
+						if( !fileName.endsWith( ".aura" ) ){
+							fileName += ".aura";
+						}
+						intermediary = "";
+					}
+					
 					if( this.ignoreSet.contains( line.toLowerCase() )){
 						if( isChatty ) System.out.println( "ignoring: file[" + line + "]" );
 					} else if( fileName.indexOf( '.' ) < 0 ){
@@ -176,6 +187,7 @@ public class SFDC_ApplyFileListToPackage extends Task {
 					} else {
 						metaFolderName = PackageUtil.convertFolderToMeta( folderName, fileName );
 						strippedFileName = FileUtil.removeExtension( folderName, fileName );
+						
 						if( metaFolderName == null || metaFolderName.isEmpty() ){
 							throw( new BuildException( PackageUtil.ERROR_UNKNOWN_CONVERSION + folderName ));
 						}
