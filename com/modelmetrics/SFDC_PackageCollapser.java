@@ -49,7 +49,7 @@ public class SFDC_PackageCollapser extends Task {
 			NodeList nodes = doc.getElementsByTagName( PackageUtil.TAG_TYPES );
 			Node node = null;
 			Map<String,LinkedList<String>> map = null;
-			String type = null;
+			String type = null, folderType = null, fileExtension = "";
 			Iterator<String> itr = null;
 			LinkedList<String> list = null;
 			
@@ -60,12 +60,17 @@ public class SFDC_PackageCollapser extends Task {
 				
 				if( map != null && map.containsKey( PackageUtil.TAG_NAME ) && map.containsKey( PackageUtil.TAG_MEMBERS ) ){
 					type = XML_Util.popMultiMap( map, PackageUtil.TAG_NAME );
+					folderType = PackageUtil.convertMetaToFolder( type );
+					if( folderType == null || ("").equals( folderType ) ){
+						folderType = type;
+					}
+					fileExtension = PackageUtil.convertMetaToExtension( type );
 					list = map.get( PackageUtil.TAG_MEMBERS );
 					if( list != null ){
 						itr = list.iterator();
 						
 						while( itr.hasNext() ){
-							out.write( type + this.delimiter + itr.next() + NEWLINE );
+							out.write( folderType + this.delimiter + itr.next() + fileExtension + NEWLINE );
 						}
 					}
 				}
