@@ -27,6 +27,9 @@ public class SFDC_NewPackageFromFileList extends Task {
 	/** whether the code is chatty or not **/
 	private Boolean isChatty;
 	
+	/** whether folder types that are unknown should throw an error or not **/
+	private Boolean ignoreUnknown;
+	
 	/** location of the fileList **/
 	private File fileList;
 	
@@ -42,6 +45,7 @@ public class SFDC_NewPackageFromFileList extends Task {
 		
 		this.targetFile = null;
 		this.fileList = null;
+		this.ignoreUnknown = false;
 		
 		this.NEWLINE = System.getProperty( "line.separator" );
 	}
@@ -132,11 +136,19 @@ public class SFDC_NewPackageFromFileList extends Task {
 							
 						if( isChatty ) System.out.println( "new: " + metaFolderName + "/" + intermediary + strippedFileName );
 						
-						addMemberTask.setMetadataType( metaFolderName );
-						addMemberTask.setMember( intermediary + strippedFileName );
-						addMemberTask.execute();
-						
-						if( isChatty ) System.out.println( "added " + metaFolderName + "/" + strippedFileName );
+						if( ("").equals( metaFolderName )){
+							if( this.ignoreUnknown ){
+								//System.out.println( "ignoring - unable to convert:" + metaFolderName );
+								if( isChatty ) System.out.println( "ignoring - unable to convert:" + folderName );
+							} else {
+								throw( new BuildException( PackageUtil.ERROR_UNKNOWN_CONVERSION ));
+							}
+						} else {
+							addMemberTask.setMetadataType( metaFolderName );
+							addMemberTask.setMember( intermediary + strippedFileName );
+							addMemberTask.execute();						
+							if( isChatty ) System.out.println( "added " + metaFolderName + "/" + strippedFileName );
+						}
 					} else {
 						System.out.println( ERR_INVALID_FILE_LIST + " - Ignoring:" + line );
 					}
@@ -146,6 +158,8 @@ public class SFDC_NewPackageFromFileList extends Task {
 		} catch( BuildException err ){
 			throw( err );
 		} catch( Exception err ){
+			//System.out.println( err );
+			err.printStackTrace();
 			throw( new BuildException( ERR_PACKAGE_COULD_NOT_BE_CREATED + NEWLINE + err.getMessage() ));
 		} finally {
 			try {
@@ -181,5 +195,13 @@ public class SFDC_NewPackageFromFileList extends Task {
 	
 	public void setChatty( Boolean isChatty ){
 		this.isChatty = isChatty;
+	}
+	
+	/**
+	 *  Whether unknown file types should be ignored.
+	 *  @param ignoreUnknown (Boolean) true will skip any files not understood. False will throw an error.s
+	**/
+	public void setIgnoreUnknownTypes( Boolean ignoreUnknown ){
+		this.ignoreUnknown = ignoreUnknown;
 	}
 }

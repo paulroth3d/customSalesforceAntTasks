@@ -65,6 +65,7 @@ public class PackageUtil {
 	public static final String[][] META_MAP = {
 		{ "ActionOverride", "objects", ".object" },
 		{ "AnalyticSnapshot", "analyticsnapshots", ".analyticsnapshot" },
+		{ "AppMenu", "appMenus", ".appMenu" },
 		{ "ApprovalProcess", "approvalProcesses", ".approvalProcess" },
 		{ "ApexClass", "classes", ".cls" },
 		{ "ApexComponent", "components", ".component" },
@@ -146,6 +147,7 @@ public class PackageUtil {
 	public static final String[][] FOLDER_META_MAP = {
 		{ "analyticsnapshots", "AnalyticSnapshot", ".analyticsnapshot" },
 		{ "applications", "CustomApplication", ".app" },
+		{ "appMenus", "AppMenu", ".appMenu" },
 		{ "approvalProcesses", "ApprovalProcess", ".approvalProcess" },
 		{ "classes", "ApexClass", ".cls" },
 		{ "connectedapps", "ConnectedApp", "*.connectedapp" },
